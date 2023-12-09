@@ -1,2 +1,0 @@
-# cuentas
-Modulo de cuentas.
