@@ -60,7 +60,7 @@ public class Transaccion {
     private Long version;
 
     @ManyToOne()
-    @JoinColumn(name = "cod_cuenta", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "COD_CUENTA", nullable = false, insertable = false, updatable = false)
     private Cuenta cuenta;
 
     public Transaccion() {
