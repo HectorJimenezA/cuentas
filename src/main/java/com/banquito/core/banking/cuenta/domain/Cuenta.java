@@ -1,4 +1,4 @@
-package com.banquito.core.baking.cuenta.domain;
+package com.banquito.core.banking.cuenta.domain;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,12 +49,15 @@ public class Cuenta {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaUltimoCambio;
 
-    // @ManyToOne()
-    // @JoinColumn(name = "COD_TIPO_CUENTA", nullable = false, updatable = false, insertable = false)
-    // private TipoCuenta tipoCuenta;
+    @Version
+    private Long version;
 
-    // @OneToMany()
-    // private List <Transaccion> transaccion;
+    @ManyToOne()
+    @JoinColumn(name = "cod_tipo_cuenta", nullable = false, updatable = false, insertable = false)
+    private TipoCuenta tipoCuenta;
+
+    @OneToMany()
+    private List <Transaccion> transaccion;
 
     // @ManyToOne()
     // @JoinColumn(name = "COD_CLIENTE", nullable = false, updatable = false, insertable = false)

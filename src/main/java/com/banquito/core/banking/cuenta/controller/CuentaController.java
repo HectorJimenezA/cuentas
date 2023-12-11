@@ -1,9 +1,9 @@
-package com.banquito.core.baking.cuenta.controller;
+package com.banquito.core.banking.cuenta.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.banquito.core.baking.cuenta.domain.Cuenta;
-import com.banquito.core.baking.cuenta.service.CuentaService;
+import com.banquito.core.banking.cuenta.domain.Cuenta;
+import com.banquito.core.banking.cuenta.service.CuentaService;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("cuenta")
+@RequestMapping("/cuenta")
 
 public class CuentaController {
     @Autowired
     private CuentaService cuentaService;
 
-    @GetMapping("getall")
+    @GetMapping("/getall")
     public List<Cuenta> GetAll(){
         return cuentaService.GetAll();
     }

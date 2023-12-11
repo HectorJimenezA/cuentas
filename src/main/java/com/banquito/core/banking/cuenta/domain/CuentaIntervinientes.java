@@ -1,35 +1,39 @@
-package com.banquito.core.baking.cuenta.domain;
+package com.banquito.core.banking.cuenta.domain;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Version;
+import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 @Setter
 @Entity
-@Table(name = "CUENTA_INTERVINIENTES")
+@Table(name = "cuenta_intervinientes")
 public class CuentaIntervinientes {
     @EmbeddedId
     private CuentaIntervinientesPK PK;
 
-    @Column(name = "FECHA_INICIO", nullable = false )
+    @Column(name = "fecha_inicio", nullable = false )
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaInicio;
 
-     @Column(name = "FECHA_FIN", nullable = true )
+     @Column(name = "fecha_fin", nullable = true )
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaFin;
 
-    @Column(name = "ESTADO", nullable = false, length = 3)
+    @Column(name = "estado", nullable = false, length = 3)
     private String estado;
 
-    
+    @Version
+    private Long version;
+
 
     public CuentaIntervinientes() {
     }

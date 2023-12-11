@@ -1,12 +1,13 @@
-package com.banquito.core.baking.cuenta.service.impl;
+package com.banquito.core.banking.cuenta.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.banquito.core.baking.cuenta.service.CuentaService;
-import com.banquito.core.baking.cuenta.dao.CuentaRepository;
-import com.banquito.core.baking.cuenta.domain.Cuenta;
+
+import com.banquito.core.banking.cuenta.dao.CuentaRepository;
+import com.banquito.core.banking.cuenta.domain.Cuenta;
+import com.banquito.core.banking.cuenta.service.CuentaService;
 
 @Service
 public class CuentaServiceImpl implements CuentaService {

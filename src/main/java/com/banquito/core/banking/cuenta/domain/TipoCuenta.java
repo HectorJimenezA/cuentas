@@ -1,48 +1,49 @@
-package com.banquito.core.baking.cuenta.domain;
+package com.banquito.core.banking.cuenta.domain;
 
 import jakarta.persistence.Entity;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Version;
+import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+@Getter
 @Setter
 @Entity
-@Table(name = "TIPO_CUENTA")
+@Table(name = "tipo_cuenta")
 public class TipoCuenta {
     @Id
-    @Column(name = "COD_TIPO_CUENTA", nullable = false, length = 10)
+    @Column(name = "cod_tipo_cuenta", nullable = false, length = 10)
     private String codTipoCuenta;
-    @Column(name = "NOMBRE", nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
-    @Column(name = "DESCRIPCION", nullable = false, length = 500)
+    @Column(name = "descripcion", nullable = false, length = 500)
     private String descripcion;
-    @Column(name = "TIPO_CAPITALIZACION", nullable = false, length = 3)
+    @Column(name = "tipo_capitalizacion", nullable = false, length = 3)
     private String tipoCapitalizacion;
-    @Column(name = "FORMA_CAPITALIZACION", nullable = false, length = 3)
+    @Column(name = "forma_capitalizacion", nullable = false, length = 3)
     private String formaCapitalizacion;
-    @Column(name = "MAXIMO_NUMERO_INTERVINIENTES", nullable = false, length = 2)
-    private Integer numeroIntervinientes;
+    @Column(name = "maximo_numero_intervinientes", nullable = false, length = 2)
+    private Integer maximoNumeroIntervinientes;
 
-    @Column(name = "FECHA_CREACION", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaCreacion;
 
-    // @OneToMany(mappedBy = "tipoCuenta")
-    // private List<Cuenta> cuenta;
+    @Version
+    private Long version;
 
-    // @ManyToOne()
-    // @JoinColumn(name = "COD_TASA_INTERES",insertable = false, updatable = false)
-    // private TasaInteres tasaIntereses;
+    @OneToMany(mappedBy = "tipoCuenta")
+    private List<Cuenta> cuenta;
+
 
     public TipoCuenta() {
     }
