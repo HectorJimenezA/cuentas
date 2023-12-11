@@ -3,7 +3,6 @@ package com.banquito.core.banking.cuenta.domain;
 import jakarta.persistence.Entity;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -13,37 +12,32 @@ import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tipo_cuenta")
+@Table(name = "TIPO_CUENTA")
 public class TipoCuenta {
     @Id
-    @Column(name = "cod_tipo_cuenta", nullable = false, length = 10)
+    @Column(name = "COD_TIPO_CUENTA", nullable = false, length = 10)
     private String codTipoCuenta;
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Column(name = "NOMBRE", nullable = false, length = 50)
     private String nombre;
-    @Column(name = "descripcion", nullable = false, length = 500)
+    @Column(name = "DESCRIPCION", nullable = false, length = 500)
     private String descripcion;
-    @Column(name = "tipo_capitalizacion", nullable = false, length = 3)
+    @Column(name = "TIPO_CAPITALIZACION", nullable = false, length = 3)
     private String tipoCapitalizacion;
-    @Column(name = "forma_capitalizacion", nullable = false, length = 3)
+    @Column(name = "FORMA_CAPITALIZACION", nullable = false, length = 3)
     private String formaCapitalizacion;
-    @Column(name = "maximo_numero_intervinientes", nullable = false, length = 2)
+    @Column(name = "MAXIMO_NUMERO_INTERVINIENTES", nullable = false, length = 2)
     private Integer maximoNumeroIntervinientes;
 
-    @Column(name = "fecha_creacion", nullable = false)
+    @Column(name = "FECHA_CREACION", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaCreacion;
 
     @Version
     private Long version;
-
-    @OneToMany(mappedBy = "tipoCuenta")
-    private List<Cuenta> cuenta;
-
 
     public TipoCuenta() {
     }

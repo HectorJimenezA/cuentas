@@ -22,30 +22,30 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "cuenta")
+@Table(name = "CUENTA")
 public class Cuenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cod_cuenta", nullable = false)
+    @Column(name = "COD_CUENTA", nullable = false)
     private Integer codCuenta;
 
-    @Column(name = "numero_cuenta", nullable = false, length = 8)
+    @Column(name = "NUMERO_CUENTA", nullable = false, length = 8)
     private String numeroCuenta;
 
-    @Column(name = "saldo_contable", nullable = false, precision = 18, scale = 2)
+    @Column(name = "SALDO_CONTABLE", nullable = false, precision = 18, scale = 2)
     private BigDecimal saldoContable;
 
-    @Column(name = "saldo_disponible", nullable = false, precision = 18, scale = 2)
+    @Column(name = "SALDO_DISPONIBLE", nullable = false, precision = 18, scale = 2)
     private BigDecimal saldoDisponible;
 
-    @Column(name = "estado", nullable = false, length = 3)
+    @Column(name = "ESTADO", nullable = false, length = 3)
     private String estado;
 
-    @Column(name = "fecha_creacion", nullable = false)
+    @Column(name = "FECHA_CREACION", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaCreacion;
 
-    @Column(name = "fecha_ultimo_cambio", nullable = false)
+    @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaUltimoCambio;
 
@@ -53,15 +53,12 @@ public class Cuenta {
     private Long version;
 
     @ManyToOne()
-    @JoinColumn(name = "cod_tipo_cuenta", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "COD_TIPO_CUENTA", nullable = false, updatable = false, insertable = false)
     private TipoCuenta tipoCuenta;
 
     @OneToMany()
     private List <Transaccion> transaccion;
 
-    // @ManyToOne()
-    // @JoinColumn(name = "COD_CLIENTE", nullable = false, updatable = false, insertable = false)
-    // private Cliente cliente;
 
     public Cuenta() {
     }

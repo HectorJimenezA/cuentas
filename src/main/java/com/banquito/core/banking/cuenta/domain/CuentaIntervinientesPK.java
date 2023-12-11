@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 @Embeddable
 public class CuentaIntervinientesPK implements Serializable {
-    @Column(name = "cod_cuenta", nullable = false)
+    @Column(name = "COD_CUENTA", nullable = false)
     private Integer codCuenta;
 
-    @Column(name = "cod_cliente_persona", nullable = false)
+    @Column(name = "COD_CLIENTE_PERSONA", nullable = false)
     private Integer codClientePersona;
 
     public CuentaIntervinientesPK() {

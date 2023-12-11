@@ -15,20 +15,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "cuenta_intervinientes")
+@Table(name = "CUENTA_INTERVINIENTES")
 public class CuentaIntervinientes {
     @EmbeddedId
     private CuentaIntervinientesPK PK;
 
-    @Column(name = "fecha_inicio", nullable = false )
+    @Column(name = "FECHA_INICIO", nullable = false )
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaInicio;
 
-     @Column(name = "fecha_fin", nullable = true )
+     @Column(name = "FECHA_FIN", nullable = true )
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaFin;
 
-    @Column(name = "estado", nullable = false, length = 3)
+    @Column(name = "ESTADO", nullable = false, length = 3)
     private String estado;
 
     @Version
