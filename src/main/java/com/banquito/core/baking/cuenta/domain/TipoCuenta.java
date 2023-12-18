@@ -1,4 +1,4 @@
-package com.banquito.core.banking.cuenta.domain;
+package com.banquito.core.baking.cuenta.domain;
 
 import jakarta.persistence.Entity;
 
@@ -36,6 +36,10 @@ public class TipoCuenta {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaCreacion;
 
+    @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp fechaUltimoCambio;
+
     @Version
     private Long version;
 
@@ -70,8 +74,5 @@ public class TipoCuenta {
             return false;
         return true;
     }
-
-    
-    
 
 }

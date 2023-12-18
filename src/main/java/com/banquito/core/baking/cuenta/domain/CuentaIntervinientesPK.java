@@ -1,4 +1,4 @@
-package com.banquito.core.banking.cuenta.domain;
+package com.banquito.core.baking.cuenta.domain;
 
 import java.io.Serializable;
 

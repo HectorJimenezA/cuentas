@@ -1,4 +1,4 @@
-package com.banquito.core.banking.cuenta.domain;
+package com.banquito.core.baking.cuenta.domain;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -56,12 +56,20 @@ public class Transaccion {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaAfectacion;
 
+    @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp fechaUltimoCambio;
+
     @Version
     private Long version;
 
-    @ManyToOne()
-    @JoinColumn(name = "COD_CUENTA", nullable = false, insertable = false, updatable = false)
-    private Cuenta cuenta;
+    // @ManyToOne()
+    // @JoinColumn(name = "COD_CUENTA_ORIGEN", nullable = false, insertable = false, updatable = false)
+    // private Cuenta codCuentaOrigen;
+
+    // @ManyToOne()
+    // @JoinColumn(name = "COD_CUENTA_DESTINO", nullable = false, insertable = false, updatable = false)
+    // private Cuenta codCuentaDestino;
 
     public Transaccion() {
     }
@@ -95,5 +103,4 @@ public class Transaccion {
         return true;
     }
 
-    
 }

@@ -1,4 +1,4 @@
-package com.banquito.core.banking.cuenta;
+package com.banquito.core.baking.cuenta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
