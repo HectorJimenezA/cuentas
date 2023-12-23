@@ -5,11 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.banquito.core.baking.cuenta.domain.Transaccion;
 
-import java.util.List;
-import java.sql.Timestamp;
-
-
-
 
 @Repository
 public interface TransaccionRepository extends CrudRepository<Transaccion, Integer>{
