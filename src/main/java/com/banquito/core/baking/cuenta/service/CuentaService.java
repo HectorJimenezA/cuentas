@@ -26,9 +26,9 @@ public class CuentaService {
         this.tipoCuentaRepository = tipoCuentaRepository;
     }
 
-    public Optional <Cuenta> getById(Integer id){
+    public Optional <Cuenta> getById(Integer codCuenta){
 
-            return  this.CuentaRepository.findById(id);
+            return  this.CuentaRepository.findById(codCuenta);
     }
 
     public Iterable <TipoCuenta> listAll(){
@@ -85,6 +85,11 @@ public class CuentaService {
         } catch (Exception e) {
             throw new CreacionException("Ocurrio un error al eliminar la cuenta, error: " + e.getMessage(), e);
         }
+    }
+
+    public Cuenta obtenerCuentaPorNumeroCuenta (String numeroCuenta){
+
+        return this.CuentaRepository.findByNumeroCuenta(numeroCuenta);
     }
 
 }

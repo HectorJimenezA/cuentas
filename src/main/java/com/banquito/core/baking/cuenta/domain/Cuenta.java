@@ -32,6 +32,12 @@ public class Cuenta {
     @Column(name = "NUMERO_CUENTA", nullable = false, length = 8)
     private String numeroCuenta;
 
+    @Column(name = "COD_TIPO_CUENTA", nullable = false, length = 10)
+    private String codTipoCuenta;
+
+    @Column(name = "COD_CLIENTE", nullable = true)
+    private Integer codCliente;
+
     @Column(name = "SALDO_CONTABLE", nullable = false, precision = 18, scale = 2)
     private BigDecimal saldoContable;
 
@@ -49,11 +55,12 @@ public class Cuenta {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaUltimoCambio;
 
-    @Version
-    private Long version;
+    // @Version
+    // private Long version;
 
     // @ManyToOne()
-    // @JoinColumn(name = "COD_TIPO_CUENTA", nullable = false, updatable = false, insertable = false)
+    // @JoinColumn(name = "COD_TIPO_CUENTA", nullable = false, updatable = false,
+    // insertable = false)
     // private TipoCuenta tipoCuenta;
 
     // @OneToMany()

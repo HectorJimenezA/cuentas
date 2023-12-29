@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.service.CuentaService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/cuenta")
@@ -43,4 +45,11 @@ public class CuentaController {
     public ResponseEntity<Cuenta> Update(@RequestBody Cuenta credito) {
         return new ResponseEntity<>(cuentaService.update(credito), HttpStatus.OK);
     }
+
+    @GetMapping("/buscar/{cuenta}")
+    public ResponseEntity <Cuenta> buscarPorNumeroCuenta (@PathVariable("cuenta") String numeroCuenta) {
+        return new ResponseEntity<>(cuentaService.obtenerCuentaPorNumeroCuenta(numeroCuenta), HttpStatus.OK);
+    }
+    
+
 }
