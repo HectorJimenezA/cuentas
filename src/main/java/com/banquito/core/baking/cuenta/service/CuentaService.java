@@ -17,45 +17,42 @@ public class CuentaService {
     private final CuentaRepository CuentaRepository;
     private final TipoCuentaRepository tipoCuentaRepository;
 
-    
-
     public CuentaService(CuentaRepository cuentaRepository,
             TipoCuentaRepository tipoCuentaRepository) {
         CuentaRepository = cuentaRepository;
         this.tipoCuentaRepository = tipoCuentaRepository;
     }
 
-    public Optional <Cuenta> getById(Integer codCuenta){
+    public Optional<Cuenta> getById(Integer codCuenta) {
 
-            return  this.CuentaRepository.findById(codCuenta);
+        return this.CuentaRepository.findById(codCuenta);
     }
 
-    public Iterable <TipoCuenta> listAll(){
+    public Iterable<TipoCuenta> listAll() {
         return this.tipoCuentaRepository.findAll();
 
     }
 
     @Transactional
-    public TipoCuenta crearTipoCuenta (TipoCuenta tipoCuenta)
-   {
-     try {
-        return this.tipoCuentaRepository.save(tipoCuenta);
-     } catch (Exception e) {
-        throw new CreacionException("Ocurrio un error al crear el tipo de cuenta: "+tipoCuenta+" Error: "+e,e);
-
-     }
-   } 
-
-   @Transactional
-    public Cuenta create (Cuenta cuenta){
+    public TipoCuenta crearTipoCuenta(TipoCuenta tipoCuenta) {
         try {
-          
-                return this.CuentaRepository.save(cuenta);
-            
-        
+            return this.tipoCuentaRepository.save(tipoCuenta);
+        } catch (Exception e) {
+            throw new CreacionException("Ocurrio un error al crear el tipo de cuenta: " + tipoCuenta + " Error: " + e,
+                    e);
+
+        }
+    }
+
+    @Transactional
+    public Cuenta create(Cuenta cuenta) {
+        try {
+
+            return this.CuentaRepository.save(cuenta);
+
         } catch (Exception e) {
             // TODO: handle exception
-            throw new CreacionException("Error en creacion de la cuenta: "+cuenta+", Error: "+e, e);
+            throw new CreacionException("Error en creacion de la cuenta: " + cuenta + ", Error: " + e, e);
         }
     }
 
@@ -75,9 +72,9 @@ public class CuentaService {
 
     public void delete(Integer id) {
         try {
-            Optional<Cuenta> credito = getById(id);
-            if (credito.isPresent()) {
-                this.CuentaRepository.delete(credito.get());
+            Optional<Cuenta> cuenta = getById(id);
+            if (cuenta.isPresent()) {
+                this.CuentaRepository.delete(cuenta.get());
             } else {
                 throw new RuntimeException("La cuenta con el id" + id + " no existe");
             }
@@ -86,9 +83,27 @@ public class CuentaService {
         }
     }
 
-    public Cuenta obtenerCuentaPorNumeroCuenta (String numeroCuenta){
+    public Cuenta obtenerCuentaPorNumeroCuenta(String numeroCuenta) {
 
         return this.CuentaRepository.findByNumeroCuenta(numeroCuenta);
+    }
+
+    public Cuenta actualizarBalance(Cuenta cuentaUpdate) {
+
+        try {
+            Optional<Cuenta> cuenta = CuentaRepository.findById(cuentaUpdate.getCodCuenta());
+            if (cuenta.isPresent()) {
+                cuentaUpdate
+                        .setSaldoDisponible(cuenta.get().getSaldoDisponible().add(cuentaUpdate.getSaldoDisponible()));
+                System.out.println(cuentaUpdate.toString());
+                return CuentaRepository.save(cuentaUpdate);
+            } else {
+                throw new RuntimeException("La cuenta con el id" + cuentaUpdate.getCodCuenta() + " no existe");
+            }
+        } catch (Exception e) {
+            throw new CreacionException("Ocurrio un error al actualizar balance de la cuenta, error: " + e.getMessage(), e);
+        }
+
     }
 
 }

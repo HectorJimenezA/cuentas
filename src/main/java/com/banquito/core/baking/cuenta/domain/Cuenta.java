@@ -94,4 +94,14 @@ public class Cuenta {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Cuenta [codCuenta=" + codCuenta + ", numeroCuenta=" + numeroCuenta + ", codTipoCuenta=" + codTipoCuenta
+                + ", codCliente=" + codCliente + ", saldoContable=" + saldoContable + ", saldoDisponible="
+                + saldoDisponible + ", estado=" + estado + ", fechaCreacion=" + fechaCreacion + ", fechaUltimoCambio="
+                + fechaUltimoCambio + "]";
+    }
+
+    
+
 }
