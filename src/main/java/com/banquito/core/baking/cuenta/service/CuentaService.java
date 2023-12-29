@@ -95,7 +95,9 @@ public class CuentaService {
             if (cuenta.isPresent()) {
                 cuentaUpdate
                         .setSaldoDisponible(cuenta.get().getSaldoDisponible().add(cuentaUpdate.getSaldoDisponible()));
-                System.out.println(cuentaUpdate.toString());
+
+                cuentaUpdate
+                        .setSaldoContable(cuenta.get().getSaldoContable().add(cuentaUpdate.getSaldoContable()));
                 return CuentaRepository.save(cuentaUpdate);
             } else {
                 throw new RuntimeException("La cuenta con el id" + cuentaUpdate.getCodCuenta() + " no existe");
