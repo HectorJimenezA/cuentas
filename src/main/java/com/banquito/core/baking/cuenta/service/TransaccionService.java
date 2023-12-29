@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.banquito.core.baking.cuenta.dao.TransaccionRepository;
-import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.Transaccion;
 
 import jakarta.transaction.Transactional;
