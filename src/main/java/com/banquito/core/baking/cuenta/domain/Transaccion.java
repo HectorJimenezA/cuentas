@@ -25,6 +25,9 @@ public class Transaccion {
     @Column(name = "COD_TRANSACCION", nullable = false)
     private Integer codTransaccion;
 
+    @Column(name = "COD_CUENTA", nullable = false)
+    private Integer codCuenta;
+
     @Column(name = "COD_UNICO", nullable = false, length = 64)
     private String codUnico;
 
@@ -54,9 +57,9 @@ public class Transaccion {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaAfectacion;
 
-    @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp fechaUltimoCambio;
+    // @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = true)
+    // @Temporal(TemporalType.TIMESTAMP)
+    // private Timestamp fechaUltimoCambio;
 
     @Version
     private Long version;
@@ -76,11 +79,14 @@ public class Transaccion {
         this.codTransaccion = codTransaccion;
     }
 
+    
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((codTransaccion == null) ? 0 : codTransaccion.hashCode());
+        result = prime * result + ((codUnico == null) ? 0 : codUnico.hashCode());
         return result;
     }
 
@@ -98,7 +104,22 @@ public class Transaccion {
                 return false;
         } else if (!codTransaccion.equals(other.codTransaccion))
             return false;
+        if (codUnico == null) {
+            if (other.codUnico != null)
+                return false;
+        } else if (!codUnico.equals(other.codUnico))
+            return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Transaccion [codTransaccion=" + codTransaccion + ", codCuenta=" + codCuenta + ", codUnico=" + codUnico
+                + ", tipoAfectacion=" + tipoAfectacion + ", valorDebe=" + valorDebe + ", valorHaber=" + valorHaber
+                + ", tipoTransaccion=" + tipoTransaccion + ", detalle=" + detalle + ", fechaCreacion=" + fechaCreacion
+                + ", estado=" + estado + ", fechaAfectacion=" + fechaAfectacion + "]";
+    }
+
+    
 
 }

@@ -36,4 +36,9 @@ public class TransaccionController {
         return new ResponseEntity<>(transaccionService.create(transaccion), HttpStatus.OK);
     }
 
+    @PostMapping("/depositar")
+    public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
+        return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);
+    }
+
 }

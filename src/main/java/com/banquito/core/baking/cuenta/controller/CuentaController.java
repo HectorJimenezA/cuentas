@@ -1,5 +1,7 @@
 package com.banquito.core.baking.cuenta.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.banquito.core.baking.cuenta.domain.Cuenta;
+import com.banquito.core.baking.cuenta.service.CreacionException;
 import com.banquito.core.baking.cuenta.service.CuentaService;
 
 @RestController
@@ -42,5 +45,25 @@ public class CuentaController {
     @PutMapping("/update")
     public ResponseEntity<Cuenta> Update(@RequestBody Cuenta credito) {
         return new ResponseEntity<>(cuentaService.update(credito), HttpStatus.OK);
+    }
+
+    @GetMapping("/buscar/{cuenta}")
+    public ResponseEntity<Cuenta> buscarPorNumeroCuenta(@PathVariable("cuenta") String numeroCuenta) {
+        return new ResponseEntity<>(cuentaService.obtenerCuentaPorNumeroCuenta(numeroCuenta), HttpStatus.OK);
+    }
+
+    @PutMapping("/actualizar/balance")
+    public ResponseEntity<Cuenta> UpdateBalance(@RequestBody Cuenta cuenta) {
+        return new ResponseEntity<>(cuentaService.actualizarBalance(cuenta), HttpStatus.OK);
+    }
+
+    @GetMapping("/obtenerCuentasCliente/{codCliente}")
+    public ResponseEntity<List<Cuenta>> obtenerCuentasCliente(@PathVariable("codCliente") Integer codCliente) {
+        try {
+            List<Cuenta> cuentas = cuentaService.ObtenerCuentasCliente(codCliente);
+            return new ResponseEntity<>(cuentas, HttpStatus.OK);
+        } catch (CreacionException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
