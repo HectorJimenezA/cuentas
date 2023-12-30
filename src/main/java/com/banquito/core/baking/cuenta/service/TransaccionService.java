@@ -1,15 +1,12 @@
 package com.banquito.core.baking.cuenta.service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.banquito.core.baking.cuenta.dao.CuentaRepository;
+
 import com.banquito.core.baking.cuenta.dao.TransaccionRepository;
-import com.banquito.core.baking.cuenta.domain.Cuenta;
-import com.banquito.core.baking.cuenta.domain.TipoCuenta;
 import com.banquito.core.baking.cuenta.domain.Transaccion;
 
 import jakarta.transaction.Transactional;
@@ -17,7 +14,6 @@ import jakarta.transaction.Transactional;
 @Service
 public class TransaccionService {
     private final TransaccionRepository transaccionRepository;
-    //private final CuentaRepository cuentaRepository;
 
 
 
@@ -45,7 +41,7 @@ public class TransaccionService {
         try {
             
             if ("DEP".equals(transaccionBeneficiario.getTipoTransaccion())) {
-                
+                System.out.println("Holaaaaaaaaaaaa"+transaccionBeneficiario.toString());
                 transaccionBeneficiario.hashCode();
                 return this.transaccionRepository.save(transaccionBeneficiario);
             } else {
