@@ -1,6 +1,5 @@
 package com.banquito.core.baking.cuenta.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,8 +17,11 @@ import com.banquito.core.baking.cuenta.service.TipoCuentaService;
 @RestController
 @RequestMapping("/tipocredito")
 public class TipoCuentaController {
-    @Autowired
     private TipoCuentaService tipoCuentaService;
+
+    public TipoCuentaController(TipoCuentaService tipoCuentaService) {
+        this.tipoCuentaService = tipoCuentaService;
+    }
 
     // @GetMapping("/getall")
     // public ResponseEntity<Iterable<TipoCuenta>> GetAll() {

@@ -16,4 +16,6 @@ public interface CuentaRepository extends CrudRepository<Cuenta, Integer>{
     List<Cuenta> findByFechaCreacionAndFechaUltimoCambioOrderByFechaUltimoCambio(Timestamp fechaCreacion, Timestamp fechaUltimoCambio);
     
     List<Cuenta> findByCodCliente(Integer codCliente);
+
+
 }

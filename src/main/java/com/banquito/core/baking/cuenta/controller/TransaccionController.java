@@ -1,6 +1,5 @@
 package com.banquito.core.baking.cuenta.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,11 @@ import com.banquito.core.baking.cuenta.service.TransaccionService;
 @RestController
 @RequestMapping("/transaccion")
 public class TransaccionController {
-    @Autowired
     private TransaccionService transaccionService;
+
+    public TransaccionController(TransaccionService transaccionService) {
+        this.transaccionService = transaccionService;
+    }
 
     // @GetMapping("/getall")
     // public ResponseEntity<Iterable<Transaccion>> GetAll() {
