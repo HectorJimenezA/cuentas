@@ -61,8 +61,8 @@ public class Transaccion {
     // @Temporal(TemporalType.TIMESTAMP)
     // private Timestamp fechaUltimoCambio;
 
-    // @Version
-    // private Long version;
+    @Version
+    private Long version;
 
     // @ManyToOne()
     // @JoinColumn(name = "COD_CUENTA_ORIGEN", nullable = false, insertable = false, updatable = false)

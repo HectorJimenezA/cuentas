@@ -51,8 +51,8 @@ public class Cuenta {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaUltimoCambio;
 
-    // @Version
-    // private Long version;
+    @Version
+    private Long version;
 
     // @ManyToOne()
     // @JoinColumn(name = "COD_TIPO_CUENTA", nullable = false, updatable = false,

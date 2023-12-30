@@ -1,6 +1,7 @@
 package com.banquito.core.baking.cuenta.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -14,18 +15,17 @@ import jakarta.transaction.Transactional;
 @Service
 
 public class CuentaService {
-    private final CuentaRepository CuentaRepository;
+    private final CuentaRepository cuentaRepository;
     private final TipoCuentaRepository tipoCuentaRepository;
 
-    public CuentaService(CuentaRepository cuentaRepository,
-            TipoCuentaRepository tipoCuentaRepository) {
-        CuentaRepository = cuentaRepository;
+    public CuentaService(CuentaRepository cuentaRepository, TipoCuentaRepository tipoCuentaRepository) {
+        this.cuentaRepository = cuentaRepository;
         this.tipoCuentaRepository = tipoCuentaRepository;
     }
 
     public Optional<Cuenta> getById(Integer codCuenta) {
 
-        return this.CuentaRepository.findById(codCuenta);
+        return this.cuentaRepository.findById(codCuenta);
     }
 
     public Iterable<TipoCuenta> listAll() {
@@ -48,7 +48,7 @@ public class CuentaService {
     public Cuenta create(Cuenta cuenta) {
         try {
 
-            return this.CuentaRepository.save(cuenta);
+            return this.cuentaRepository.save(cuenta);
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -56,6 +56,7 @@ public class CuentaService {
         }
     }
 
+    @Transactional
     public Cuenta update(Cuenta cuentaUpdate) {
         try {
             Optional<Cuenta> cuenta = getById(cuentaUpdate.getCodCuenta());
@@ -74,7 +75,7 @@ public class CuentaService {
         try {
             Optional<Cuenta> cuenta = getById(id);
             if (cuenta.isPresent()) {
-                this.CuentaRepository.delete(cuenta.get());
+                this.cuentaRepository.delete(cuenta.get());
             } else {
                 throw new RuntimeException("La cuenta con el id" + id + " no existe");
             }
@@ -85,20 +86,21 @@ public class CuentaService {
 
     public Cuenta obtenerCuentaPorNumeroCuenta(String numeroCuenta) {
 
-        return this.CuentaRepository.findByNumeroCuenta(numeroCuenta);
+        return this.cuentaRepository.findByNumeroCuenta(numeroCuenta);
     }
 
+    @Transactional
     public Cuenta actualizarBalance(Cuenta cuentaUpdate) {
 
         try {
-            Optional<Cuenta> cuenta = CuentaRepository.findById(cuentaUpdate.getCodCuenta());
+            Optional<Cuenta> cuenta = this.cuentaRepository.findById(cuentaUpdate.getCodCuenta());
             if (cuenta.isPresent()) {
                 cuentaUpdate
                         .setSaldoDisponible(cuenta.get().getSaldoDisponible().add(cuentaUpdate.getSaldoDisponible()));
 
                 cuentaUpdate
                         .setSaldoContable(cuenta.get().getSaldoContable().add(cuentaUpdate.getSaldoContable()));
-                return CuentaRepository.save(cuentaUpdate);
+                return this.cuentaRepository.save(cuentaUpdate);
             } else {
                 throw new RuntimeException("La cuenta con el id" + cuentaUpdate.getCodCuenta() + " no existe");
             }
@@ -106,6 +108,20 @@ public class CuentaService {
             throw new CreacionException("Ocurrio un error al actualizar balance de la cuenta, error: " + e.getMessage(), e);
         }
 
+    }
+
+
+    public List<Cuenta> ObtenerCuentasCliente(Integer codCliente){
+        try{
+            List<Cuenta> cuentas = this.cuentaRepository.findByCodCliente(codCliente);
+            if (!cuentas.isEmpty()) {
+                return cuentas;
+            } else {
+                throw new RuntimeException("El cliente no tiene cuentas asociadas.");
+            }
+        } catch (Exception e) {
+            throw new CreacionException("Ocurrio un error al obtener cuentas del cliente " + e.getMessage(), e);
+        }
     }
 
 }

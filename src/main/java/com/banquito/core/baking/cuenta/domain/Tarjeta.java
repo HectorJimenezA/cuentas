@@ -54,8 +54,8 @@ public class Tarjeta {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaUltimoCambio;
 
-    // @Version
-    // private Long version;
+    @Version
+    private Long version;
 
     public Tarjeta() {
     }
