@@ -17,7 +17,7 @@ import com.banquito.core.baking.cuenta.service.TipoCuentaService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/tipocredito")
+@RequestMapping("/tipocuenta")
 public class TipoCuentaController {
     private TipoCuentaService tipoCuentaService;
 

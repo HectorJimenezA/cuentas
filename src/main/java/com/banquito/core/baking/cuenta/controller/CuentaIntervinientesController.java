@@ -33,6 +33,16 @@ public class CuentaIntervinientesController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/getbycuenta/{cuentaid}")
+    public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCuenta(@PathVariable("cuentaid") Integer cuentaId) {
+        return new ResponseEntity<>(cuentaIntervinientesService.getByCuenta(cuentaId), HttpStatus.OK);
+    }
+
+    @GetMapping("/getbycliente/{clientepersonaid}")
+    public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCodCliente(@PathVariable("clientepersonaid") Integer clientePersonaId) {
+        return new ResponseEntity<>(cuentaIntervinientesService.getByCodCliente(clientePersonaId), HttpStatus.OK);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<CuentaIntervinientes> Save(@RequestBody CuentaIntervinientes cuentaIntervinientes) {
         return new ResponseEntity<>(cuentaIntervinientesService.create(cuentaIntervinientes), HttpStatus.OK);
