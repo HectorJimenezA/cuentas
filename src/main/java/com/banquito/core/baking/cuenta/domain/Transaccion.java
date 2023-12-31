@@ -25,8 +25,11 @@ public class Transaccion {
     @Column(name = "COD_TRANSACCION", nullable = false)
     private Integer codTransaccion;
 
-    @Column(name = "COD_CUENTA", nullable = false)
-    private Integer codCuenta;
+    @Column(name = "COD_CUENTA_ORIGEN", nullable = true)
+    private Integer codCuentaOrigen;
+
+    @Column(name = "COD_CUENTA_DESTINO", nullable = true)
+    private Integer codCuentaDestino;
 
     @Column(name = "COD_UNICO", nullable = false, length = 64)
     private String codUnico;
@@ -57,19 +60,21 @@ public class Transaccion {
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp fechaAfectacion;
 
-    // @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = true)
-    // @Temporal(TemporalType.TIMESTAMP)
-    // private Timestamp fechaUltimoCambio;
+    @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp fechaUltimoCambio;
 
     @Version
     private Long version;
 
     // @ManyToOne()
-    // @JoinColumn(name = "COD_CUENTA_ORIGEN", nullable = false, insertable = false, updatable = false)
+    // @JoinColumn(name = "COD_CUENTA_ORIGEN", nullable = false, insertable = false,
+    // updatable = false)
     // private Cuenta codCuentaOrigen;
 
     // @ManyToOne()
-    // @JoinColumn(name = "COD_CUENTA_DESTINO", nullable = false, insertable = false, updatable = false)
+    // @JoinColumn(name = "COD_CUENTA_DESTINO", nullable = false, insertable =
+    // false, updatable = false)
     // private Cuenta codCuentaDestino;
 
     public Transaccion() {
@@ -78,8 +83,6 @@ public class Transaccion {
     public Transaccion(Integer codTransaccion) {
         this.codTransaccion = codTransaccion;
     }
-
-    
 
     @Override
     public int hashCode() {
@@ -114,12 +117,13 @@ public class Transaccion {
 
     @Override
     public String toString() {
-        return "Transaccion [codTransaccion=" + codTransaccion + ", codCuenta=" + codCuenta + ", codUnico=" + codUnico
-                + ", tipoAfectacion=" + tipoAfectacion + ", valorDebe=" + valorDebe + ", valorHaber=" + valorHaber
-                + ", tipoTransaccion=" + tipoTransaccion + ", detalle=" + detalle + ", fechaCreacion=" + fechaCreacion
-                + ", estado=" + estado + ", fechaAfectacion=" + fechaAfectacion + "]";
+        return "Transaccion [codTransaccion=" + codTransaccion + ", codCuentaOrigen=" + codCuentaOrigen
+                + ", codCuentaDestino=" + codCuentaDestino + ", codUnico=" + codUnico + ", tipoAfectacion="
+                + tipoAfectacion + ", valorDebe=" + valorDebe + ", valorHaber=" + valorHaber + ", tipoTransaccion="
+                + tipoTransaccion + ", detalle=" + detalle + ", fechaCreacion=" + fechaCreacion + ", estado=" + estado
+                + ", fechaAfectacion=" + fechaAfectacion + ", fechaUltimoCambio=" + fechaUltimoCambio + ", version="
+                + version + "]";
     }
 
-    
-
+ 
 }
