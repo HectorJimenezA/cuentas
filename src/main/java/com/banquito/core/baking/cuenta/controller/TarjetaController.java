@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.Tarjeta;
 import com.banquito.core.baking.cuenta.service.TarjetaService;
 
@@ -48,4 +49,8 @@ public class TarjetaController {
         return new ResponseEntity<>(tarjetaService.update(tarjeta), HttpStatus.OK);
     }
 
+    @GetMapping("/buscar-tarjeta/{tarjeta}")
+    public ResponseEntity<Tarjeta> buscarPorTarjeta(@PathVariable("tarjeta") String numero) {
+        return new ResponseEntity<>(tarjetaService.buscarPorTarjeta(numero), HttpStatus.OK);
+    }
 }

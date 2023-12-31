@@ -24,6 +24,9 @@ public class Tarjeta {
     @Column(name = "COD_TARJETA", nullable = false)
     private Integer codTarjeta;
 
+    @Column(name = "COD_CUENTA", nullable = true)
+    private Integer codCuenta;
+
     @Column(name = "NUMERO", nullable = false, length = 18)
     private String numero;
 

@@ -62,4 +62,8 @@ public class TarjetaService {
         }
     }
 
+    public Tarjeta buscarPorTarjeta(String numero) {
+        return this.tarjetaRepository.findByNumero(numero);
+
+    }
 }
