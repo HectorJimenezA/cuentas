@@ -12,7 +12,7 @@ public interface TransaccionRepository extends CrudRepository<Transaccion, Integ
     // List<Transaccion> findByCodCuentaAndFechaCreacionAndTipoTransaccion(Integer codCuenta, Timestamp fechaCreacion, String tipoTransaccion); 
     // List<Transaccion> findByCodCuentaAndFechaCreacionAndEstado(Integer codCuenta, Timestamp fechaCreacion, String estado); 
     // List<Transaccion> findByCodCuentaAndTipoTransaccionAndEstado(Integer codCuenta, String tipoTransaccion, String estado); 
-   Transaccion findByCodCuentaOrigenAnd (Integer codCuentaOrigen);
+    Transaccion findByCodCuentaOrigen (Integer codCuentaOrigen);
 
 
 }
