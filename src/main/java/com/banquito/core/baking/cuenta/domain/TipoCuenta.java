@@ -21,6 +21,8 @@ public class TipoCuenta {
     @Id
     @Column(name = "COD_TIPO_CUENTA", nullable = false, length = 10)
     private String codTipoCuenta;
+    @Column(name = "COD_TASA_INTERES", nullable = false, length = 50)
+    private String codTasaInteres;
     @Column(name = "NOMBRE", nullable = false, length = 50)
     private String nombre;
     @Column(name = "DESCRIPCION", nullable = false, length = 500)

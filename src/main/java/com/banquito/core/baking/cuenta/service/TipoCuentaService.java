@@ -22,6 +22,9 @@ public class TipoCuentaService {
         return this.tipoCuentaRepository.findById(codTipoCuenta);
 
     }
+    public Iterable<TipoCuenta> listAll() {
+        return this.tipoCuentaRepository.findAll();
+    }
 
     @Transactional
     public TipoCuenta create(TipoCuenta tipoCuenta) {
