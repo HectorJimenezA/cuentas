@@ -1,6 +1,7 @@
 package com.banquito.core.baking.cuenta.service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -54,6 +55,10 @@ public class TransaccionService {
                     "Error en creacion de la transaccion: " + transaccionBeneficiario + ", Error: " + e, e);
         }
 
+    }
+
+    public List <Transaccion> BuscarPorCodigoCuenta(Integer codCuentaOrigen) {
+        return this.transaccionRepository.findByCodCuentaOrigen(codCuentaOrigen);
     }
 
 }

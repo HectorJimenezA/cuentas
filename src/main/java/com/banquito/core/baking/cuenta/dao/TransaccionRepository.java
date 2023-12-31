@@ -1,5 +1,7 @@
 package com.banquito.core.baking.cuenta.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +14,6 @@ public interface TransaccionRepository extends CrudRepository<Transaccion, Integ
     // List<Transaccion> findByCodCuentaAndFechaCreacionAndTipoTransaccion(Integer codCuenta, Timestamp fechaCreacion, String tipoTransaccion); 
     // List<Transaccion> findByCodCuentaAndFechaCreacionAndEstado(Integer codCuenta, Timestamp fechaCreacion, String estado); 
     // List<Transaccion> findByCodCuentaAndTipoTransaccionAndEstado(Integer codCuenta, String tipoTransaccion, String estado); 
-    Transaccion findByCodCuentaOrigen (Integer codCuentaOrigen);
 
-
+    List<Transaccion> findByCodCuentaOrigen (Integer codCuentaOrigen);
 }

@@ -1,5 +1,7 @@
 package com.banquito.core.baking.cuenta.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.banquito.core.baking.cuenta.domain.Transaccion;
+import com.banquito.core.baking.cuenta.service.CreacionException;
 import com.banquito.core.baking.cuenta.service.TransaccionService;
+
+import jakarta.transaction.Transactional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -34,15 +39,27 @@ public class TransaccionController {
                 .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
+    
+    @Transactional
     @PostMapping("/save")
     public ResponseEntity<Transaccion> Save(@RequestBody Transaccion transaccion) {
         return new ResponseEntity<>(transaccionService.create(transaccion), HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping("/depositar")
     public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
         return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);
+    }
+
+    @GetMapping("/obtener-transacciones/{codCuenta}")
+    public ResponseEntity<List<Transaccion>> obtenerTransacionesCliente(@PathVariable("codCuenta") Integer codCuenta) {
+        try {
+            List<Transaccion> cuentas = transaccionService.BuscarPorCodigoCuenta(codCuenta);
+            return new ResponseEntity<>(cuentas, HttpStatus.OK);
+        } catch (CreacionException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
