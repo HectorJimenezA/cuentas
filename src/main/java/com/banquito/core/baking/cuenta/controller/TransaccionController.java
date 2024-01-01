@@ -61,5 +61,13 @@ public class TransaccionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @PostMapping("/transferencia")
+    public ResponseEntity<Transaccion> Transferencia(@RequestBody Transaccion transaccion) {
+        try {
+            return new ResponseEntity<>(transaccionService.transferencia(transaccion), HttpStatus.OK);
+        } catch (CreacionException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
