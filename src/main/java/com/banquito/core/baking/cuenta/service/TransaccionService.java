@@ -1,6 +1,5 @@
 package com.banquito.core.baking.cuenta.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ import com.banquito.core.baking.cuenta.dao.CuentaRepository;
 import com.banquito.core.baking.cuenta.dao.TransaccionRepository;
 import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.Transaccion;
-import com.banquito.core.baking.cuenta.service.CuentaService;
 
 import jakarta.transaction.Transactional;
 
