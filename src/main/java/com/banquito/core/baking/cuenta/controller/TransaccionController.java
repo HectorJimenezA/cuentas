@@ -1,6 +1,9 @@
 package com.banquito.core.baking.cuenta.controller;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,17 +42,34 @@ public class TransaccionController {
                 .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     @Transactional
     @PostMapping("/save")
     public ResponseEntity<Transaccion> Save(@RequestBody Transaccion transaccion) {
         return new ResponseEntity<>(transaccionService.create(transaccion), HttpStatus.OK);
     }
 
+
     @Transactional
-    @PostMapping("/depositar")
-    public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
-        return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);
+    @PostMapping("/depositar-monto")
+    public ResponseEntity<Transaccion> depositarMonto(@RequestBody Map<String, Object> requestBody) {
+        String numeroCuenta = (String) requestBody.get("numeroCuenta");
+        BigDecimal valorDebe = new BigDecimal(requestBody.get("valorDebe").toString());
+        Timestamp fechaCreacion = Timestamp.valueOf(requestBody.get("fechaCreacion").toString());
+
+        return new ResponseEntity<>(transaccionService.depositar(numeroCuenta, valorDebe, fechaCreacion),
+                HttpStatus.OK);
+    }
+
+    @Transactional
+    @PostMapping("/retirar")
+    public ResponseEntity<Transaccion> retirar (@RequestBody Map<String, Object> requestBody) {
+        String numeroCuenta = (String) requestBody.get("numeroCuenta");
+        BigDecimal valorHaber = new BigDecimal(requestBody.get("valorHaber").toString());
+        Timestamp fechaCreacion = Timestamp.valueOf(requestBody.get("fechaCreacion").toString());
+
+        return new ResponseEntity<>(transaccionService.retirar(numeroCuenta, valorHaber, fechaCreacion),
+                HttpStatus.OK);
     }
 
     @GetMapping("/obtener-transacciones/{codCuenta}")
@@ -61,6 +81,7 @@ public class TransaccionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/transferencia")
     public ResponseEntity<Transaccion> Transferencia(@RequestBody Transaccion transaccion) {
         try {
