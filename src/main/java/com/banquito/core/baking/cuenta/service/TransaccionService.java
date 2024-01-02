@@ -64,7 +64,7 @@ public class TransaccionService {
     public Transaccion transferencia(Transaccion transaccion) {
         try {
 
-            if ("TRE".equals(transaccion.getTipoTransaccion())) {
+            if ("TRE".equals(transaccion.getTipoTransaccion()) || "TEN".equals(transaccion.getTipoTransaccion())) {
                 System.out.println("Holaaaaaaaaaaaa" + transaccion.toString());
                 Optional<Cuenta> cuentaOrigen = cuentaRepository.findById(transaccion.getCodCuentaOrigen());
                 Optional<Cuenta> cuentaDestino = cuentaRepository.findById(transaccion.getCodCuentaDestino());
@@ -75,12 +75,12 @@ public class TransaccionService {
 
                     cuentaO.setSaldoContable(
                             cuentaO.getSaldoContable().subtract(transaccion.getValorDebe()));
-                    cuentaO.setSaldoContable(
+                    cuentaO.setSaldoDisponible(
                             cuentaO.getSaldoDisponible().subtract(transaccion.getValorDebe()));
 
                     cuentaD.setSaldoContable(
                             cuentaD.getSaldoContable().add(transaccion.getValorDebe()));
-                    cuentaD.setSaldoContable(
+                    cuentaD.setSaldoDisponible(
                             cuentaD.getSaldoDisponible().add(transaccion.getValorDebe()));
 
                     cuentaRepository.save(cuentaO);
