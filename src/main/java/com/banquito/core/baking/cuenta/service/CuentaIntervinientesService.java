@@ -1,10 +1,14 @@
 package com.banquito.core.baking.cuenta.service;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
 import com.banquito.core.baking.cuenta.dao.CuentaIntervinientesRepository;
+import com.banquito.core.baking.cuenta.dao.CuentaRepository;
+import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientes;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientesPK;
 
@@ -13,9 +17,12 @@ import jakarta.transaction.Transactional;
 @Service
 public class CuentaIntervinientesService {
     private final CuentaIntervinientesRepository cuentaIntervinientesRepository;
+    private final CuentaRepository cuentaRepository;
 
-    public CuentaIntervinientesService(CuentaIntervinientesRepository cuentaIntervinientesRepository) {
+    public CuentaIntervinientesService(CuentaIntervinientesRepository cuentaIntervinientesRepository,
+            CuentaRepository cuentaRepository) {
         this.cuentaIntervinientesRepository = cuentaIntervinientesRepository;
+        this.cuentaRepository = cuentaRepository;
     }
 
     public Optional<CuentaIntervinientes> getById(Integer codCuenta, Integer codClientePersona) {
@@ -29,6 +36,25 @@ public class CuentaIntervinientesService {
 
     public Iterable<CuentaIntervinientes> getByCodCliente(Integer CodClientePersona) {
         return this.cuentaIntervinientesRepository.findByPKCodClientePersona(CodClientePersona);
+    }
+
+    public List<Cuenta> getCuentaByInter(Integer CodClientePersona) {
+        try {
+            Iterable<CuentaIntervinientes> listaIntervinientes = getByCodCliente(CodClientePersona);
+            List<Cuenta> listaCuentas = new ArrayList<>();
+            for (CuentaIntervinientes intervinientes : listaIntervinientes) {
+                Optional<Cuenta> cuenta = this.cuentaRepository.findById(intervinientes.getPK().getCodCuenta());
+                if (cuenta.isPresent()) {
+                    listaCuentas.add(cuenta.get());
+                }
+            }
+            return listaCuentas;
+
+        } catch (Exception e) {
+            throw new CreacionException(
+                    "Error al buscar las cuentas del cliente con codigo: " + CodClientePersona + ", Error: " + e,
+                    e);
+        }
     }
 
     @Transactional

@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientes;
 import com.banquito.core.baking.cuenta.service.CuentaIntervinientesService;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -36,6 +39,10 @@ public class CuentaIntervinientesController {
     @GetMapping("/getbycuenta/{cuentaid}")
     public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCuenta(@PathVariable("cuentaid") Integer cuentaId) {
         return new ResponseEntity<>(cuentaIntervinientesService.getByCuenta(cuentaId), HttpStatus.OK);
+    }
+    @GetMapping("/getcuentbyinter/{clientepersonaid}")
+    public ResponseEntity<List<Cuenta>> GetByCuentaByInter(@PathVariable("clientepersonaid") Integer clientepersonaid) {
+        return new ResponseEntity<>(cuentaIntervinientesService.getCuentaByInter(clientepersonaid), HttpStatus.OK);
     }
 
     @GetMapping("/getbycliente/{clientepersonaid}")
