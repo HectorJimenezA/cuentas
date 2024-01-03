@@ -18,7 +18,7 @@ import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.service.CreacionException;
 import com.banquito.core.baking.cuenta.service.CuentaService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/cuenta")
 public class CuentaController {

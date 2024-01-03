@@ -16,9 +16,8 @@ import com.banquito.core.baking.cuenta.domain.Transaccion;
 import com.banquito.core.baking.cuenta.service.CreacionException;
 import com.banquito.core.baking.cuenta.service.TransaccionService;
 
-import jakarta.transaction.Transactional;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/transaccion")
 public class TransaccionController {
@@ -39,14 +38,12 @@ public class TransaccionController {
                 .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
-    @Transactional
+
     @PostMapping("/save")
     public ResponseEntity<Transaccion> Save(@RequestBody Transaccion transaccion) {
         return new ResponseEntity<>(transaccionService.create(transaccion), HttpStatus.OK);
     }
 
-    @Transactional
     @PostMapping("/depositar")
     public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
         return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);

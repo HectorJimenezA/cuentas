@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.banquito.core.baking.cuenta.domain.Tarjeta;
 import com.banquito.core.baking.cuenta.service.TarjetaService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/tarjeta")
 public class TarjetaController {

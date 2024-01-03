@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientes;
 import com.banquito.core.baking.cuenta.service.CuentaIntervinientesService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/cuentaintervinientes")
 public class CuentaIntervinientesController {
