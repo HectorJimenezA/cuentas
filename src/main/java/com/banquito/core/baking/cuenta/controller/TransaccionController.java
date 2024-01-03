@@ -47,10 +47,15 @@ public class TransaccionController {
         return new ResponseEntity<>(transaccionService.create(transaccion), HttpStatus.OK);
     }
 
-    // @PostMapping("/depositar")
-    // public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
-    //     return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);
-    // }
+    @PostMapping("/depositar-monto")
+    public ResponseEntity<Transaccion> depositarMonto(@RequestBody Map<String, Object> requestBody) {
+        String numeroCuenta = (String) requestBody.get("numeroCuenta");
+        BigDecimal valorDebe = new BigDecimal(requestBody.get("valorDebe").toString());
+        Timestamp fechaCreacion = Timestamp.valueOf(requestBody.get("fechaCreacion").toString());
+
+        return new ResponseEntity<>(transaccionService.depositar(numeroCuenta, valorDebe, fechaCreacion),
+                HttpStatus.OK);
+    }
 
     @GetMapping("/obtener-transacciones/{codCuenta}")
     public ResponseEntity<List<Transaccion>> obtenerTransacionesCliente(@PathVariable("codCuenta") Integer codCuenta) {
@@ -69,6 +74,16 @@ public class TransaccionController {
         } catch (CreacionException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/retirar")
+    public ResponseEntity<Transaccion> retirar (@RequestBody Map<String, Object> requestBody) {
+        String numeroCuenta = (String) requestBody.get("numeroCuenta");
+        BigDecimal valorHaber = new BigDecimal(requestBody.get("valorHaber").toString());
+        Timestamp fechaCreacion = Timestamp.valueOf(requestBody.get("fechaCreacion").toString());
+
+        return new ResponseEntity<>(transaccionService.retirar(numeroCuenta, valorHaber, fechaCreacion),
+                HttpStatus.OK);
     }
 
 }
