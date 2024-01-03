@@ -1,6 +1,9 @@
 package com.banquito.core.baking.cuenta.controller;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,10 +47,10 @@ public class TransaccionController {
         return new ResponseEntity<>(transaccionService.create(transaccion), HttpStatus.OK);
     }
 
-    @PostMapping("/depositar")
-    public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
-        return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);
-    }
+    // @PostMapping("/depositar")
+    // public ResponseEntity<Transaccion> Depositar(@RequestBody Transaccion transaccion) {
+    //     return new ResponseEntity<>(transaccionService.depositar(transaccion), HttpStatus.OK);
+    // }
 
     @GetMapping("/obtener-transacciones/{codCuenta}")
     public ResponseEntity<List<Transaccion>> obtenerTransacionesCliente(@PathVariable("codCuenta") Integer codCuenta) {
@@ -56,6 +59,15 @@ public class TransaccionController {
             return new ResponseEntity<>(cuentas, HttpStatus.OK);
         } catch (CreacionException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/transferencia")
+    public ResponseEntity<Transaccion> Transferencia(@RequestBody Transaccion transaccion) {
+        try {
+            return new ResponseEntity<>(transaccionService.transferencia(transaccion), HttpStatus.OK);
+        } catch (CreacionException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

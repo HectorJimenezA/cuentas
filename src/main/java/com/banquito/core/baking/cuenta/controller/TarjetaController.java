@@ -48,4 +48,8 @@ public class TarjetaController {
         return new ResponseEntity<>(tarjetaService.update(tarjeta), HttpStatus.OK);
     }
 
+    @GetMapping("/buscar-tarjeta/{tarjeta}")
+    public ResponseEntity<Tarjeta> buscarPorTarjeta(@PathVariable("tarjeta") String numero) {
+        return new ResponseEntity<>(tarjetaService.buscarPorTarjeta(numero), HttpStatus.OK);
+    }
 }

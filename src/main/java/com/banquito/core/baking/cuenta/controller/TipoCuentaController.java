@@ -17,7 +17,7 @@ import com.banquito.core.baking.cuenta.service.TipoCuentaService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/tipocredito")
+@RequestMapping("/tipocuenta")
 public class TipoCuentaController {
     private TipoCuentaService tipoCuentaService;
 
@@ -25,10 +25,10 @@ public class TipoCuentaController {
         this.tipoCuentaService = tipoCuentaService;
     }
 
-    // @GetMapping("/getall")
-    // public ResponseEntity<Iterable<TipoCuenta>> GetAll() {
-    //     return new ResponseEntity<>(tipoCuentaService.listAll(), HttpStatus.OK);
-    // }
+    @GetMapping("/getall")
+    public ResponseEntity<Iterable<TipoCuenta>> GetAll() {
+        return new ResponseEntity<>(tipoCuentaService.listAll(), HttpStatus.OK);
+    }
 
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<TipoCuenta> GetById(@PathVariable("id") String id) {
