@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.stereotype.Service;
+
 import com.banquito.core.baking.cuenta.dao.CuentaRepository;
 import com.banquito.core.baking.cuenta.dao.TransaccionRepository;
 import com.banquito.core.baking.cuenta.domain.Cuenta;
@@ -17,6 +19,7 @@ import com.banquito.core.baking.cuenta.dto.TransaccionDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+@Service
 @Slf4j
 public class TransaccionService {
     private final TransaccionRepository transaccionRepository;

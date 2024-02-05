@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/cuentaintervinientes")
+@RequestMapping("/api/v1/cuentaintervinientes")
 public class CuentaIntervinientesController {
     private final CuentaIntervinientesService cuentaIntervinientesService;
 
@@ -43,7 +43,7 @@ public class CuentaIntervinientesController {
     }
 
     @GetMapping("/getbycuenta/{cuentaid}")
-    public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCuenta(@PathVariable("cuentaid") Integer cuentaId) {
+    public ResponseEntity<Iterable<CuentaIntervinientes>> ObtenerPorCuenta(@PathVariable("cuentaid") Integer cuentaId) {
         log.info("Se encontraron cuentas intervenientes para la cuenta con ID: {}", cuentaId);
         return new ResponseEntity<>(cuentaIntervinientesService.getByCuenta(cuentaId), HttpStatus.OK);
     }
@@ -60,13 +60,13 @@ public class CuentaIntervinientesController {
         return new ResponseEntity<>(cuentaIntervinientesService.getByCodCliente(clientePersonaId), HttpStatus.OK);
     }
 
-    @PostMapping("/guardar")
+    @PostMapping("/guardado")
     public ResponseEntity<CuentaIntervinientes> Guardar(@RequestBody CuentaIntervinientesDTO cuentaIntervinientes) {
         log.info("Cuenta interveniente guardada con éxito: {}", cuentaIntervinientes);
         return new ResponseEntity<>(cuentaIntervinientesService.crear(cuentaIntervinientes), HttpStatus.OK);
     }
 
-    @DeleteMapping("/borrar/{cuentaid}/{clientepersonaid}")
+    @DeleteMapping("/eliminacion/{cuentaid}/{clienteid}")
     public ResponseEntity<Boolean> Borrar(@PathVariable("cuentaid") Integer cuentaId,
             @PathVariable("clienteid") Integer clieclientePersonaIdnteId) {
         cuentaIntervinientesService.borrar(cuentaId, clieclientePersonaIdnteId);
@@ -74,7 +74,7 @@ public class CuentaIntervinientesController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    @PutMapping("/actualizar")
+    @PutMapping("/actualizacion")
     public ResponseEntity<CuentaIntervinientes> actualizar(@RequestBody CuentaIntervinientesDTO cuentaIntervinientes) {
         log.info("Cuenta interveniente actualizada con éxito: {}", cuentaIntervinientes);
         return new ResponseEntity<>(cuentaIntervinientesService.actualizar(cuentaIntervinientes), HttpStatus.OK);
