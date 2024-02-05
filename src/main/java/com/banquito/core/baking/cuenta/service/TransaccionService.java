@@ -6,20 +6,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import org.springframework.stereotype.Service;
-
 import com.banquito.core.baking.cuenta.dao.CuentaRepository;
 import com.banquito.core.baking.cuenta.dao.TransaccionRepository;
 import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.Transaccion;
-import jakarta.transaction.Transactional;
+import com.banquito.core.baking.cuenta.dto.TransaccionDTO;
 
-@Service
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class TransaccionService {
     private final TransaccionRepository transaccionRepository;
     private final CuentaRepository cuentaRepository;
 
     public Optional<Transaccion> getById(Integer codTransaccion) {
+        log.info("Obteniendo la transacción con id: {}", codTransaccion);
         return this.transaccionRepository.findById(codTransaccion);
     }
 
@@ -29,21 +31,33 @@ public class TransaccionService {
     }
 
     @Transactional
-    public Transaccion create(Transaccion transaccion) {
+    public TransaccionDTO crear(TransaccionDTO dto) {
         try {
+            Transaccion transaccion = new Transaccion();
+            transaccion.setTipoAfectacion(dto.getTipoAfectacion());
+            transaccion.setValorDebe(dto.getValorDebe());
+            transaccion.setValorHaber(dto.getValorHaber());
+            transaccion.setTipoTransaccion(dto.getTipoTransaccion());
+            transaccion.setDetalle(dto.getDetalle());
+            transaccion.setFechaCreacion(dto.getFechaCreacion());
+            transaccion.setEstado(dto.getEstado());
+            transaccion.setFechaAfectacion(dto.getFechaAfectacion());
+            transaccion.setFechaUltimoCambio(dto.getFechaUltimoCambio());
+            
+            log.info("Se creo la transacción: {}", transaccion);
             return this.transaccionRepository.save(transaccion);
-
+            
         } catch (Exception e) {
-            // TODO: handle exception
-            throw new CreacionException("Error en creacion de la transaccion: " + transaccion + ", Error: " + e, e);
+            
+            throw new CreacionException("Error en creacion de la transaccion: ", e);
         }
     }
 
-
+  
     @Transactional
     public Transaccion depositar(String numCuenta, BigDecimal valorDebe, Timestamp fecha) {
         try {
-
+            log.info("Iniciando el proceso de depósito en la cuenta con número: {}", numCuenta);
             int longitud = 64;
             String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             Random random = new Random();
@@ -74,8 +88,8 @@ public class TransaccionService {
                 transaccion.setFechaUltimoCambio(fecha);
                 transaccion.setVersion(1L);
 
-                cuentaRepository.save(cuentaBeneficiario);///////////////////// ojo poner al final
-
+                cuentaRepository.save(cuentaBeneficiario);
+                log.info("Depósito realizado con éxito. Transacción creada: {}", transaccion);
                 return this.transaccionRepository.save(transaccion);
 
             } else {
@@ -93,7 +107,7 @@ public class TransaccionService {
     @Transactional
     public Transaccion retirar(String numCuenta, BigDecimal valorHaber, Timestamp fecha) {
         try {
-
+            log.info("Iniciando el proceso de retiro en la cuenta con número: {}", numCuenta);
             int longitud = 64;
             String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             Random random = new Random();
@@ -125,8 +139,8 @@ public class TransaccionService {
                     transaccion.setFechaUltimoCambio(fecha);
                     transaccion.setVersion(1L);
 
-                    cuentaRepository.save(cuentaPropietario);///////////////////// ojo poner al final
-
+                    cuentaRepository.save(cuentaPropietario);
+                    log.info("Retiro realizado con éxito. Transacción creada: {}", transaccion);
                     return this.transaccionRepository.save(transaccion);
                 } else {
                     throw new RuntimeException("No posee fondos suficientes");
@@ -147,6 +161,7 @@ public class TransaccionService {
     @Transactional
     public Transaccion transferencia(Transaccion transaccion) {
         try {
+            log.info("Iniciando el proceso de transferencia con la transacción: {}", transaccion);
 
             if ("TRE".equals(transaccion.getTipoTransaccion()) || "TEN".equals(transaccion.getTipoTransaccion())) {
                 System.out.println("Holaaaaaaaaaaaa" + transaccion.toString());
@@ -170,6 +185,9 @@ public class TransaccionService {
                     cuentaRepository.save(cuentaO);
                     cuentaRepository.save(cuentaD);
 
+                    log.info("Transferencia realizada con éxito. Cuenta origen: {}, Cuenta destino: {}, Monto: {}",
+                        cuentaO.getNumeroCuenta(), cuentaD.getNumeroCuenta(), transaccion.getValorDebe());
+
                 }
                 transaccion.hashCode();
                 return this.transaccionRepository.save(transaccion);
@@ -186,6 +204,7 @@ public class TransaccionService {
     }
 
     public List<Transaccion> BuscarPorCodigoCuenta(Integer codCuentaOrigen) {
+        log.info("Buscando transacciones por código de cuenta de origen: {}", codCuentaOrigen);
         return this.transaccionRepository.findByCodCuentaOrigen(codCuentaOrigen);
     }
 

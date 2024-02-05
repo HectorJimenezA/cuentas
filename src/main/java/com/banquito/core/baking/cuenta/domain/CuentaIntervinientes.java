@@ -70,4 +70,8 @@ public class CuentaIntervinientes {
         return true;
     }
 
+    
+
+    
+
 }
