@@ -1,6 +1,10 @@
 package com.banquito.core.baking.cuenta.service;
 
 import java.util.Optional;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,9 +13,15 @@ import com.banquito.core.baking.cuenta.dao.CuentaRepository;
 import com.banquito.core.baking.cuenta.dao.TipoCuentaRepository;
 import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.TipoCuenta;
+import com.banquito.core.baking.cuenta.dto.CuentaBuilder;
+import com.banquito.core.baking.cuenta.dto.CuentaDTO;
+import com.banquito.core.baking.cuenta.dto.TipoCuentaBuilder;
+import com.banquito.core.baking.cuenta.dto.TipoCuentaDTO;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 
 public class CuentaService {
@@ -23,45 +33,37 @@ public class CuentaService {
         this.tipoCuentaRepository = tipoCuentaRepository;
     }
 
-    public Optional<Cuenta> getById(Integer codCuenta) {
+    public CuentaDTO obtenerPorId(Integer codCuenta) {
 
-        return this.cuentaRepository.findById(codCuenta);
+        log.info("Obtener la cuenta");
+        Cuenta cuenta = this.cuentaRepository.findById(codCuenta).get();
+        log.info("Se ha obtenido la cuenta {}",cuenta);
+        return CuentaBuilder.toDTO(cuenta);
     }
 
-    public Iterable<TipoCuenta> listAll() {
-        return this.tipoCuentaRepository.findAll();
-
-    }
+    
 
     @Transactional
-    public TipoCuenta crearTipoCuenta(TipoCuenta tipoCuenta) {
-        try {
-            return this.tipoCuentaRepository.save(tipoCuenta);
-        } catch (Exception e) {
-            throw new CreacionException("Ocurrio un error al crear el tipo de cuenta: " + tipoCuenta + " Error: " + e,
-                    e);
-
-        }
-    }
-
-    @Transactional
-    public Cuenta create(Cuenta cuenta) {
+    public Cuenta crear(CuentaDTO dto) {
         try {
 
+            Cuenta cuenta=CuentaBuilder.toCuenta(dto);
+            cuenta.setFechaCreacion(Timestamp.from(Instant.now()));
+            cuenta.setEstado("ACT");
             return this.cuentaRepository.save(cuenta);
 
         } catch (Exception e) {
-            // TODO: handle exception
-            throw new CreacionException("Error en creacion de la cuenta: " + cuenta + ", Error: " + e, e);
+            log.error("Error al crear la  cuenta: {}", dto);
+            throw new CreacionException("Error en creacion de la cuenta: " + dto + ", Error: " + e, e);
         }
     }
 
     @Transactional
-    public Cuenta update(Cuenta cuentaUpdate) {
+    public Cuenta actualizar(Cuenta cuentaUpdate) {
         try {
-            Optional<Cuenta> cuenta = getById(cuentaUpdate.getCodCuenta());
+            Optional<Cuenta> cuenta = obtenerPorId(cuentaUpdate.getCodCuenta());
             if (cuenta.isPresent()) {
-                return create(cuentaUpdate);
+                return crear(cuentaUpdate);
             } else {
                 throw new RuntimeException(
                         "La cuenta con id" + cuentaUpdate.getCodCuenta() + " no existe");
@@ -71,9 +73,9 @@ public class CuentaService {
         }
     }
 
-    public void delete(Integer id) {
+    public void eliminar(Integer id) {
         try {
-            Optional<Cuenta> cuenta = getById(id);
+            Optional<Cuenta> cuenta = obtenerPorId(id);
             if (cuenta.isPresent()) {
                 this.cuentaRepository.delete(cuenta.get());
             } else {
@@ -84,9 +86,12 @@ public class CuentaService {
         }
     }
 
-    public Cuenta obtenerCuentaPorNumeroCuenta(String numeroCuenta) {
+    public CuentaDTO obtenerCuentaPorNumeroCuenta(String numeroCuenta) {
 
-        return this.cuentaRepository.findByNumeroCuenta(numeroCuenta);
+        log.info("Obtener la cuenta");
+        Cuenta cuenta = this.cuentaRepository.findByNumeroCuenta(numeroCuenta);
+        log.info("Se ha obtenido la cuenta {}",cuenta);
+        return CuentaBuilder.toDTO(cuenta);
     }
 
     @Transactional
@@ -111,11 +116,16 @@ public class CuentaService {
     }
 
 
-    public List<Cuenta> ObtenerCuentasCliente(Integer codCliente){
+    public List<CuentaDTO> ObtenerCuentasCliente(Integer codCliente){
+
         try{
-            List<Cuenta> cuentas = this.cuentaRepository.findByCodCliente(codCliente);
+        List<CuentaDTO> dtos = new ArrayList<>();
+        List<Cuenta> cuentas = this.cuentaRepository.findByCodCliente(codCliente);
             if (!cuentas.isEmpty()) {
-                return cuentas;
+                for (Cuenta cuenta : cuentas ){
+                    dtos.add(CuentaBuilder.toDTO(cuenta));
+                }
+                return dtos;
             } else {
                 throw new RuntimeException("El cliente no tiene cuentas asociadas.");
             }
@@ -123,5 +133,4 @@ public class CuentaService {
             throw new CreacionException("Ocurrio un error al obtener cuentas del cliente " + e.getMessage(), e);
         }
     }
-
 }

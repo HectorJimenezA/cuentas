@@ -1,14 +1,24 @@
 package com.banquito.core.baking.cuenta.service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.banquito.core.baking.cuenta.dao.TipoCuentaRepository;
+import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.TipoCuenta;
+import com.banquito.core.baking.cuenta.dto.CuentaBuilder;
+import com.banquito.core.baking.cuenta.dto.CuentaDTO;
+import com.banquito.core.baking.cuenta.dto.TipoCuentaBuilder;
+import com.banquito.core.baking.cuenta.dto.TipoCuentaDTO;
 
 import jakarta.transaction.Transactional;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class TipoCuentaService {
     private final TipoCuentaRepository tipoCuentaRepository;
@@ -17,32 +27,42 @@ public class TipoCuentaService {
         this.tipoCuentaRepository = tipoCuentaRepository;
     }
 
-    public Optional<TipoCuenta> getById(String codTipoCuenta) {
-        
-        return this.tipoCuentaRepository.findById(codTipoCuenta);
+    public TipoCuentaDTO obtenerPorId(String codTipoCuenta) {
 
+        log.info("Obtener la cuenta");
+        TipoCuenta tipoCuenta = this.tipoCuentaRepository.findById(codTipoCuenta).get();
+        log.info("Se ha obtenido la cuenta {}",tipoCuenta);
+        return TipoCuentaBuilder.toDTO(tipoCuenta);
     }
-    public Iterable<TipoCuenta> listAll() {
-        return this.tipoCuentaRepository.findAll();
+   
+    public List<TipoCuentaDTO> listarTodos() {
+
+        List<TipoCuentaDTO> dtos = new ArrayList<>();
+        for (TipoCuenta tipoCuenta : this.tipoCuentaRepository.findAll()){
+            dtos.add(TipoCuentaBuilder.toDTO(tipoCuenta));
+        }
+        return dtos;
+
     }
 
     @Transactional
-    public TipoCuenta create(TipoCuenta tipoCuenta) {
+    public TipoCuenta crearTipoCuenta(TipoCuentaDTO dto) {
         try {
-
+            TipoCuenta tipoCuenta=TipoCuentaBuilder.toTipoCuenta(dto);
+            tipoCuenta.setFechaCreacion(Timestamp.from(Instant.now()));
             return this.tipoCuentaRepository.save(tipoCuenta);
-
         } catch (Exception e) {
-            // TODO: handle exception
-            throw new CreacionException("Error en creacion del Tipo de Cuenta: " + tipoCuenta + ", Error: " + e, e);
+            log.error("Error al crear el tipo de cuenta: {}", dto);
+            throw new CreacionException("Ocurrio un error al crear el tipo de cuenta: " + dto + " Error: " + e,e);
+
         }
     }
 
     public TipoCuenta update(TipoCuenta tipoCuentaUpdate) {
         try {
-            Optional<TipoCuenta> tipoCuenta = getById(tipoCuentaUpdate.getCodTipoCuenta());
+            Optional<TipoCuenta> tipoCuenta = obtenerPorId(tipoCuentaUpdate.getCodTipoCuenta());
             if (tipoCuenta.isPresent()) {
-                return create(tipoCuentaUpdate);
+                return crearTipoCuenta(tipoCuentaUpdate);
             } else {
                 throw new RuntimeException(
                         "El tipo de cuenta con id" + tipoCuentaUpdate.getCodTipoCuenta() + " no existe");
@@ -55,7 +75,7 @@ public class TipoCuentaService {
 
     public void delete(String id) {
         try {
-            Optional<TipoCuenta> tipoCuenta = getById(id);
+            Optional<TipoCuenta> tipoCuenta = obtenerPorId(id);
             if (tipoCuenta.isPresent()) {
                 this.tipoCuentaRepository.delete(tipoCuenta.get());
             } else {

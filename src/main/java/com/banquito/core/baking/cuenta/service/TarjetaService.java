@@ -1,14 +1,22 @@
 package com.banquito.core.baking.cuenta.service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.banquito.core.baking.cuenta.dao.TarjetaRepository;
+import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.Tarjeta;
+import com.banquito.core.baking.cuenta.dto.CuentaBuilder;
+import com.banquito.core.baking.cuenta.dto.CuentaDTO;
+import com.banquito.core.baking.cuenta.dto.TarjetaBuilder;
+import com.banquito.core.baking.cuenta.dto.TarjetaDTO;
 
 import jakarta.transaction.Transactional;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class TarjetaService {
     private final TarjetaRepository tarjetaRepository;
@@ -17,29 +25,38 @@ public class TarjetaService {
         this.tarjetaRepository = tarjetaRepository;
     }
 
-    public Optional<Tarjeta> getById(Integer codTarjeta) {
+    public TarjetaDTO obtenerPorId(Integer codTarjeta) {
 
-        return this.tarjetaRepository.findById(codTarjeta);
-
+        log.info("Obtener la cuenta");
+        Tarjeta tarjeta = this.tarjetaRepository.findById(codTarjeta).get();
+        log.info("Se ha obtenido la tarjeta {}",tarjeta);
+        
+        return TarjetaBuilder.toDTO(tarjeta);
     }
 
     @Transactional
-    public Tarjeta create(Tarjeta tarjeta) {
+    public Tarjeta crear(TarjetaDTO dto) {
         try {
 
+            Tarjeta tarjeta=TarjetaBuilder.toTarjeta(dto);
+            tarjeta.setFechaEmision(Timestamp.from(Instant.now()));
+            tarjeta.setEstado("ACT");
             return this.tarjetaRepository.save(tarjeta);
 
         } catch (Exception e) {
-            // TODO: handle exception
-            throw new CreacionException("Error en creacion de la tarjeta: " + tarjeta + ", Error: " + e, e);
+            log.error("Error al crear la  tarjeta: {}", dto);
+            throw new CreacionException("Error en creacion de la tarjeta: " + dto + ", Error: " + e, e);
         }
     }
 
-    public Tarjeta update(Tarjeta tarjetaUpdate) {
+
+
+
+    public Tarjeta actualizar(Tarjeta tarjetaUpdate) {
         try {
-            Optional<Tarjeta> tarjeta = getById(tarjetaUpdate.getCodTarjeta());
+            Optional<Tarjeta> tarjeta = obtenerPorId(tarjetaUpdate.getCodTarjeta());
             if (tarjeta.isPresent()) {
-                return create(tarjetaUpdate);
+                return crear(tarjetaUpdate);
             } else {
                 throw new RuntimeException(
                         "La tarjeta con el id" + tarjetaUpdate.getCodTarjeta() + " no existe");
@@ -49,9 +66,9 @@ public class TarjetaService {
         }
     }
 
-    public void delete(Integer codTarjeta) {
+    public void eliminar(Integer codTarjeta) {
         try {
-            Optional<Tarjeta> tarjeta = getById(codTarjeta);
+            Optional<Tarjeta> tarjeta = obtenerPorId(codTarjeta);
             if (tarjeta.isPresent()) {
                 this.tarjetaRepository.delete(tarjeta.get());
             } else {

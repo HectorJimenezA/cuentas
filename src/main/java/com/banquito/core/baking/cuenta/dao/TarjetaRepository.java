@@ -12,6 +12,7 @@ public interface TarjetaRepository extends CrudRepository<Tarjeta, Integer> {
     ///List<Tarjeta> findByCodCuentaAndFechaCreacion(Integer codCuenta, Timestamp fechaCreacion); 
     //List<Tarjeta> findByNumeroAndFechaCreacion(Integer codCuenta, Timestamp fechaCreacion);
     //List<Tarjeta> findByCodCuentaAndEstadoOrderByFechaUltimoCambio(Integer codCuent, String estado, Timestamp fechaUltimoCambio);
+    
     Tarjeta findByNumero(String numero);
     
 

@@ -1,10 +1,9 @@
 package com.banquito.core.baking.cuenta.controller;
 
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientes;
 import com.banquito.core.baking.cuenta.service.CuentaIntervinientesService;
 
-@CrossOrigin
 @RestController
-@RequestMapping("/cuentaintervinientes")
+@RequestMapping("/api/v1//cuentaintervinientes")
 public class CuentaIntervinientesController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CuentaIntervinientesController.class);
+
     private final CuentaIntervinientesService cuentaIntervinientesService;
 
     public CuentaIntervinientesController(CuentaIntervinientesService cuentaIntervinientesService) {
@@ -31,39 +30,49 @@ public class CuentaIntervinientesController {
     @GetMapping("/getbyid/{cuentaid}/{clientepersonaid}")
     public ResponseEntity<CuentaIntervinientes> GetById(@PathVariable("cuentaid") Integer cuentaId,
             @PathVariable("clientepersonaid") Integer clientePersonaId) {
-        return cuentaIntervinientesService.getById(cuentaId, clientePersonaId)
-                .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/getbycuenta/{cuentaid}")
-    public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCuenta(@PathVariable("cuentaid") Integer cuentaId) {
-        return new ResponseEntity<>(cuentaIntervinientesService.getByCuenta(cuentaId), HttpStatus.OK);
-    }
-    @GetMapping("/getcuentbyinter/{clientepersonaid}")
-    public ResponseEntity<List<Cuenta>> GetByCuentaByInter(@PathVariable("clientepersonaid") Integer clientepersonaid) {
-        return new ResponseEntity<>(cuentaIntervinientesService.getCuentaByInter(clientepersonaid), HttpStatus.OK);
-    }
-
-    @GetMapping("/getbycliente/{clientepersonaid}")
-    public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCodCliente(@PathVariable("clientepersonaid") Integer clientePersonaId) {
-        return new ResponseEntity<>(cuentaIntervinientesService.getByCodCliente(clientePersonaId), HttpStatus.OK);
+        try {
+            LOGGER.info("Obteniendo cuenta de intervinientes por ID: {}, ClientePersonaID: {}", cuentaId, clientePersonaId);
+            return cuentaIntervinientesService.getById(cuentaId, clientePersonaId)
+                    .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
+                    .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (Exception e) {
+            LOGGER.error("Error al obtener cuenta de intervinientes por ID: {}, ClientePersonaID: {}", cuentaId, clientePersonaId, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/save")
     public ResponseEntity<CuentaIntervinientes> Save(@RequestBody CuentaIntervinientes cuentaIntervinientes) {
-        return new ResponseEntity<>(cuentaIntervinientesService.create(cuentaIntervinientes), HttpStatus.OK);
+        try {
+            LOGGER.info("Guardando cuenta de intervinientes: {}", cuentaIntervinientes);
+            return new ResponseEntity<>(cuentaIntervinientesService.create(cuentaIntervinientes), HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error("Error al guardar cuenta de intervinientes: {}", cuentaIntervinientes, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/delete/{cuentaid}/{clientepersonaid}")
-    public ResponseEntity<Boolean> Delete(@PathVariable("creditoid") Integer cuentaId,
-            @PathVariable("clienteid") Integer clieclientePersonaIdnteId) {
-        cuentaIntervinientesService.delete(cuentaId, clieclientePersonaIdnteId);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public ResponseEntity<Boolean> Delete(@PathVariable("cuentaid") Integer cuentaId,
+            @PathVariable("clientepersonaid") Integer clientePersonaId) {
+        try {
+            LOGGER.info("Eliminando cuenta de intervinientes con ID: {}, ClientePersonaID: {}", cuentaId, clientePersonaId);
+            cuentaIntervinientesService.delete(cuentaId, clientePersonaId);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error("Error al eliminar cuenta de intervinientes con ID: {}, ClientePersonaID: {}", cuentaId, clientePersonaId, e);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<CuentaIntervinientes> Update(@RequestBody CuentaIntervinientes cuentaIntervinientes) {
-        return new ResponseEntity<>(cuentaIntervinientesService.update(cuentaIntervinientes), HttpStatus.OK);
+        try {
+            LOGGER.info("Actualizando cuenta de intervinientes: {}", cuentaIntervinientes);
+            return new ResponseEntity<>(cuentaIntervinientesService.update(cuentaIntervinientes), HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error("Error al actualizar cuenta de intervinientes: {}", cuentaIntervinientes, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
