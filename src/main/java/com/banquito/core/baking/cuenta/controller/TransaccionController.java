@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/transaccion")
+@RequestMapping("/api/v1/transacciones")
 public class TransaccionController {
     private TransaccionService transaccionService;
 
@@ -39,18 +39,27 @@ public class TransaccionController {
     // return new ResponseEntity<>(TransaccionService.listAll(), HttpStatus.OK);
     // }
 
-    @GetMapping("/getbyid/{id}")
-    public ResponseEntity<Transaccion> GetById(@PathVariable("id") Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<TransaccionDTO> ObtenerPorId(@PathVariable("id") Integer id) {
         log.info("Recibida solicitud para obtener la transacción con ID: {}", id);
-        return transaccionService.getById(id)
-                .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try {
+            return ResponseEntity.ok(this.transaccionService.getById(id));
+        } catch(RuntimeException rte) {
+            log.error("Error al obtener la transacción: {}", rte);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<TransaccionDTO> Guardar(@RequestBody TransaccionDTO transaccion) {
+    public ResponseEntity<Void> Guardar(@RequestBody TransaccionDTO transaccion) {
         log.info("Transacción guardada con éxito: {}", transaccion);
-        return new ResponseEntity<>(transaccionService.crear(transaccion), HttpStatus.OK);
+        try {
+            this.transaccionService.crear(transaccion);
+            return ResponseEntity.noContent().build();
+        } catch(RuntimeException rte) {
+            log.error("Error al generar la transaccion: {}", rte);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/depositar-monto")
@@ -67,10 +76,10 @@ public class TransaccionController {
     }
 
     @GetMapping("/obtener-transacciones/{codCuenta}")
-    public ResponseEntity<List<Transaccion>> obtenerTransacionesCliente(@PathVariable("codCuenta") Integer codCuenta) {
+    public ResponseEntity<List<TransaccionDTO>> obtenerTransacionesCliente(@PathVariable("codCuenta") Integer codCuenta) {
         log.info("Recibida solicitud para obtener transacciones para la cuenta con código: {}", codCuenta);
         try {
-            List<Transaccion> transacciones = transaccionService.BuscarPorCodigoCuenta(codCuenta);
+            List<TransaccionDTO> transacciones = transaccionService.BuscarPorCodigoCuenta(codCuenta);
             return ResponseEntity.ok(transacciones);
         } catch (CreacionException e) {
             log.error("Error al obtener transacciones", e);

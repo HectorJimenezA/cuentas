@@ -2,6 +2,7 @@ package com.banquito.core.baking.cuenta.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -10,6 +11,7 @@ import com.banquito.core.baking.cuenta.dao.CuentaRepository;
 import com.banquito.core.baking.cuenta.dao.TransaccionRepository;
 import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.Transaccion;
+import com.banquito.core.baking.cuenta.dto.TransaccionBuilder;
 import com.banquito.core.baking.cuenta.dto.TransaccionDTO;
 
 import jakarta.transaction.Transactional;
@@ -20,33 +22,26 @@ public class TransaccionService {
     private final TransaccionRepository transaccionRepository;
     private final CuentaRepository cuentaRepository;
 
-    public Optional<Transaccion> getById(Integer codTransaccion) {
-        log.info("Obteniendo la transacción con id: {}", codTransaccion);
-        return this.transaccionRepository.findById(codTransaccion);
-    }
-
     public TransaccionService(TransaccionRepository transaccionRepository, CuentaRepository cuentaRepository) {
         this.transaccionRepository = transaccionRepository;
         this.cuentaRepository = cuentaRepository;
     }
 
+    public TransaccionDTO getById(Integer codTransaccion) {
+        Transaccion transaccion = this.transaccionRepository.findById(codTransaccion).get();
+        log.info("Obteniendo la transacción con id: {}", codTransaccion);
+        return TransaccionBuilder.toDTO(transaccion);
+    }
+
+    
+
     @Transactional
-    public TransaccionDTO crear(TransaccionDTO dto) {
-        try {
-            Transaccion transaccion = new Transaccion();
-            transaccion.setTipoAfectacion(dto.getTipoAfectacion());
-            transaccion.setValorDebe(dto.getValorDebe());
-            transaccion.setValorHaber(dto.getValorHaber());
-            transaccion.setTipoTransaccion(dto.getTipoTransaccion());
-            transaccion.setDetalle(dto.getDetalle());
-            transaccion.setFechaCreacion(dto.getFechaCreacion());
-            transaccion.setEstado(dto.getEstado());
-            transaccion.setFechaAfectacion(dto.getFechaAfectacion());
-            transaccion.setFechaUltimoCambio(dto.getFechaUltimoCambio());
-            
+    public void crear(TransaccionDTO dto) {
+        try {          
+            Transaccion transaccion = TransaccionBuilder.toTransaccion(dto);
             log.info("Se creo la transacción: {}", transaccion);
-            return this.transaccionRepository.save(transaccion);
-            
+            this.transaccionRepository.save(transaccion);
+
         } catch (Exception e) {
             
             throw new CreacionException("Error en creacion de la transaccion: ", e);
@@ -151,7 +146,7 @@ public class TransaccionService {
                 throw new RuntimeException("No existe el número de cuenta ingresado");
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            
             throw new CreacionException(
                     "Error en creacion de la transaccion:  Error: " + e, e);
         }
@@ -203,9 +198,13 @@ public class TransaccionService {
 
     }
 
-    public List<Transaccion> BuscarPorCodigoCuenta(Integer codCuentaOrigen) {
+    public List<TransaccionDTO> BuscarPorCodigoCuenta(Integer codCuentaOrigen) {
         log.info("Buscando transacciones por código de cuenta de origen: {}", codCuentaOrigen);
-        return this.transaccionRepository.findByCodCuentaOrigen(codCuentaOrigen);
+        List<TransaccionDTO> dtos = new ArrayList<>();
+        for (Transaccion transaccion : this.transaccionRepository.findByCodCuentaOrigen(codCuentaOrigen)){
+            dtos.add(TransaccionBuilder.toDTO(transaccion));
+        }
+        return dtos;
     }
 
 }
