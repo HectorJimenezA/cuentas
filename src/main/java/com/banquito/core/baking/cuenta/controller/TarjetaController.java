@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.banquito.core.baking.cuenta.domain.Tarjeta;
+import com.banquito.core.baking.cuenta.dto.TarjetaDTO;
 import com.banquito.core.baking.cuenta.service.TarjetaService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/tarjeta")
+@RequestMapping("/api/v1/tarjetas")
 public class TarjetaController {
     private TarjetaService tarjetaService;
 
@@ -25,27 +28,51 @@ public class TarjetaController {
         this.tarjetaService = tarjetaService;
     }
 
-    @GetMapping("/getbyid/{id}")
-    public ResponseEntity<Tarjeta> GetById(@PathVariable("id") Integer id) {
-        return tarjetaService.getById(id)
-                .map(register -> new ResponseEntity<>(register, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/{id}")
+    public ResponseEntity<TarjetaDTO> buscarPorId(@PathVariable(name = "id") Integer id) {
+        log.info("Obteniendo tarjeta con ID: {}", id);
+        try {
+            return ResponseEntity.ok(this.tarjetaService.obtenerPorId(id));
+        } catch(RuntimeException rte) {
+            log.error("Error al obtener tarjeta por ID", rte);
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Tarjeta> Save(@RequestBody Tarjeta tarjeta) {
-        return new ResponseEntity<>(tarjetaService.create(tarjeta), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<Void> crear(@RequestBody TarjetaDTO tarjeta) {
+        log.info("Se va a crear la tarjeta: {}", tarjeta);
+        try {
+            this.tarjetaService.crear(tarjeta);
+            return ResponseEntity.noContent().build();
+        } catch(RuntimeException rte) {
+            log.error("Error al crear la tarjeta", rte);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> Delete(@PathVariable Integer id) {
-        tarjetaService.delete(id);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Integer id) {
+        log.info("Se va a eliminar la tarjeta con ID: {}", id);
+        try {
+            this.tarjetaService.eliminar(id);
+            return ResponseEntity.noContent().build();
+        } catch(RuntimeException rte) {
+            log.error("Error al eliminar la tarjeta", rte);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Tarjeta> Update(@RequestBody Tarjeta tarjeta) {
-        return new ResponseEntity<>(tarjetaService.update(tarjeta), HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<Void> actualizar(@RequestBody TarjetaDTO tarjeta) {
+        log.info("Se va a actualizar la tarjeta: {}", tarjeta);
+        try {
+            this.tarjetaService.actualizar(tarjeta);
+            return ResponseEntity.noContent().build();
+        } catch(RuntimeException rte) {
+            log.error("Error al actualizar la tarjeta", rte);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/buscar-tarjeta/{tarjeta}")

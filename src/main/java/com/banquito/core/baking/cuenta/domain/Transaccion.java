@@ -67,16 +67,6 @@ public class Transaccion {
     @Version
     private Long version;
 
-    // @ManyToOne()
-    // @JoinColumn(name = "COD_CUENTA_ORIGEN", nullable = false, insertable = false,
-    // updatable = false)
-    // private Cuenta codCuentaOrigen;
-
-    // @ManyToOne()
-    // @JoinColumn(name = "COD_CUENTA_DESTINO", nullable = false, insertable =
-    // false, updatable = false)
-    // private Cuenta codCuentaDestino;
-
     public Transaccion() {
     }
 
