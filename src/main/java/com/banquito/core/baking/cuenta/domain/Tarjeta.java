@@ -1,7 +1,6 @@
 package com.banquito.core.baking.cuenta.domain;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,7 +55,7 @@ public class Tarjeta {
 
     @Column(name = "FECHA_ULTIMO_CAMBIO", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaUltimoCambio;
+    private Timestamp fechaUltimoCambio;
 
     @Version
     private Long version;
@@ -96,4 +95,8 @@ public class Tarjeta {
             return false;
         return true;
     }
+
+    
+    
+
 }
