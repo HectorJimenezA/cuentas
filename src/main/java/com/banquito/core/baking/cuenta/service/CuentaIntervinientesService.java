@@ -1,19 +1,16 @@
 package com.banquito.core.baking.cuenta.service;
 
+import java.util.Date;
 import java.util.Optional;
 
+import org.apache.el.stream.Stream;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 
 import com.banquito.core.baking.cuenta.dao.CuentaIntervinientesRepository;
-import com.banquito.core.baking.cuenta.dao.CuentaRepository;
-import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientes;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientesPK;
-import com.banquito.core.baking.cuenta.dto.CuentaIntervinientesDTO;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.StringIdGenerator;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 public class CuentaIntervinientesService {
     
     private final CuentaIntervinientesRepository cuentaIntervinientesRepository;
-    private final CuentaRepository cuentaRepository;
 
-    public CuentaIntervinientesService(CuentaIntervinientesRepository cuentaIntervinientesRepository,
-            CuentaRepository cuentaRepository) {
+    public CuentaIntervinientesService(CuentaIntervinientesRepository cuentaIntervinientesRepository) {
         this.cuentaIntervinientesRepository = cuentaIntervinientesRepository;
-        this.cuentaRepository = cuentaRepository;
+        
     }
 
-    public Optional<CuentaIntervinientes> getById(Integer codCuenta, Integer codClientePersona) {
+    public Optional<CuentaIntervinientes> getById(Integer codCuenta, String codClientePersona) {
         CuentaIntervinientesPK cuentaIntervinientePK = new CuentaIntervinientesPK(codCuenta, codClientePersona);
         log.info("Se encontro la cuenta {} con el codigo cliente {}", codCuenta, codClientePersona);
         return this.cuentaIntervinientesRepository.findById(cuentaIntervinientePK);
@@ -42,73 +37,61 @@ public class CuentaIntervinientesService {
         return this.cuentaIntervinientesRepository.findByPKCodCuenta(codCuenta);
     }
 
-    public Iterable<CuentaIntervinientes> getByCodCliente(Integer CodClientePersona) {
+    public Iterable<CuentaIntervinientes> getByCodCliente(String CodClientePersona) {
         log.info("Se encontro el cliente {}", CodClientePersona);
         return this.cuentaIntervinientesRepository.findByPKCodClientePersona(CodClientePersona);
     }
 
-    public List<Cuenta> getCuentaByInter(Integer CodClientePersona) {
-        log.info("Va a obtener las cuentas del cliente:{}", CodClientePersona);
-        try {
-            Iterable<CuentaIntervinientes> listaIntervinientes = getByCodCliente(CodClientePersona);
-            List<Cuenta> listaCuentas = new ArrayList<>();
-            for (CuentaIntervinientes intervinientes : listaIntervinientes) {
-                Optional<Cuenta> cuenta = this.cuentaRepository.findById(intervinientes.getPK().getCodCuenta());
-                if (cuenta.isPresent()) {
-                    log.debug("Cuenta obtenida: {}",cuenta.get());
-                    listaCuentas.add(cuenta.get());
-                }
-            }
-            return listaCuentas;
+    // public List<Cuenta> getCuentaByInter(Integer CodClientePersona) {
+    //     log.info("Va a obtener las cuentas del cliente:{}", CodClientePersona);
+    //     try {
+    //         Iterable<CuentaIntervinientes> listaIntervinientes = getByCodCliente(CodClientePersona);
+    //         List<Cuenta> listaCuentas = new ArrayList<>();
+    //         for (CuentaIntervinientes intervinientes : listaIntervinientes) {
+    //             Optional<Cuenta> cuenta = this.cuentaRepository.findById(intervinientes.getPK().getCodCuenta());
+    //             if (cuenta.isPresent()) {
+    //                 log.debug("Cuenta obtenida: {}",cuenta.get());
+    //                 listaCuentas.add(cuenta.get());
+    //             }
+    //         }
+    //         return listaCuentas;
 
-        } catch (Exception e) {
-            throw new CreacionException(
-                    "Error al buscar las cuentas del cliente con codigo: " + CodClientePersona + ", Error: " + e,
-                    e);
-        }
-    }
+    //     } catch (Exception e) {
+    //         throw new CreacionException(
+    //                 "Error al buscar las cuentas del cliente con codigo: " + CodClientePersona + ", Error: " + e,
+    //                 e);
+    //     }
+    // }
 
     @Transactional
-    public CuentaIntervinientes crear(CuentaIntervinientesDTO dto ) {
+    public CuentaIntervinientes crear(CuentaIntervinientes dto ) {
         try {
-            CuentaIntervinientes cuentaIntervinientes = new CuentaIntervinientes();
-            cuentaIntervinientes.setEstado(dto.getEstado());
-
-            Timestamp fechaFinTimestamp = new Timestamp(dto.getFechaFin().getSeconds() * 1000L);
-            Timestamp fechaInicioTimestamp = new Timestamp(dto.getFechaInicio().getSeconds() * 1000L);
-            Timestamp fechaUltimoCambioTimestamp = new Timestamp(dto.getFechaUltimoCambio().getSeconds() * 1000L);
-
-            cuentaIntervinientes.setFechaFin(fechaFinTimestamp);
-            cuentaIntervinientes.setFechaInicio(fechaInicioTimestamp);
-            cuentaIntervinientes.setFechaUltimoCambio(fechaUltimoCambioTimestamp);
+            dto.setEstado("ACT");
+            dto.setFechaUltimoCambio(new Date());
             
-            log.info("Se creo la cuenta: {}", cuentaIntervinientes);
-            return this.cuentaIntervinientesRepository.save(cuentaIntervinientes);
+            log.info("Se creo la cuenta intervinientes: {}", dto);
+            return this.cuentaIntervinientesRepository.save(dto);
 
         } catch (Exception e) {
             throw new CreacionException(
-                    "Error en creacion de los Intervinientes en la cuenta: " + dto + ", Error: " + e,
-                    e);
+                    "Error en creacion de los Intervinientes en la cuenta: " + dto + ", Error: " + e, e);
         }
     }
 
-    public CuentaIntervinientes actualizar(CuentaIntervinientesDTO cuentaIntervinientesdto) {
+    public CuentaIntervinientes actualizar(CuentaIntervinientes cuentaIntervinientesdto) {
         try {
             Optional<CuentaIntervinientes> cuentaIntervinientesOptional = getById(
-                    cuentaIntervinientesdto.getPk().getCodCuenta(),
-                    cuentaIntervinientesdto.getPk().getCodClientePersona());
+                    cuentaIntervinientesdto.getPK().getCodCuenta(),
+                    cuentaIntervinientesdto.getPK().getCodClientePersona());
     
             if (cuentaIntervinientesOptional.isPresent()) {
-                CuentaIntervinientes cuentaIntervinientes = cuentaIntervinientesOptional.get();
-    
-                cuentaIntervinientes.setEstado(cuentaIntervinientesdto.getEstado());
-    
-                log.info("La cuenta {} se actualizó correctamente", cuentaIntervinientes);
-                return crear(cuentaIntervinientesdto);
+                        
+                log.info("La cuenta intervinientes {} se actualizó correctamente", cuentaIntervinientesdto);
+                return this.cuentaIntervinientesRepository.save(cuentaIntervinientesdto);
             } else {
                 throw new RuntimeException(
-                        "La cuenta Intervinientes con id " + cuentaIntervinientesdto.getPk().getCodCuenta() + "-"
-                                + cuentaIntervinientesdto.getPk().getCodClientePersona() + " no existe");
+                        "La cuenta Intervinientes con id " + cuentaIntervinientesdto.getPK().getCodCuenta() + "-"
+                                + cuentaIntervinientesdto.getPK().getCodClientePersona() + " no existe");
             }
         } catch (Exception e) {
             throw new CreacionException("Ocurrió un error al actualizar la cuenta, error: " + e.getMessage(), e);
@@ -116,7 +99,7 @@ public class CuentaIntervinientesService {
     }
     
 
-    public void borrar(Integer codCuenta, Integer codClientePersona) {
+    public void borrar(Integer codCuenta, String codClientePersona) {
         try {
             log.info("Intentando eliminar la cuenta intervinientes con id: {}-{}", codCuenta, codClientePersona);
             Optional<CuentaIntervinientes> credito = getById(codCuenta, codClientePersona);

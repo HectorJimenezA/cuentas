@@ -15,15 +15,22 @@ public class CuentaIntervinientesPK implements Serializable {
     private Integer codCuenta;
 
     @Column(name = "COD_CLIENTE_PERSONA", nullable = false)
-    private Integer codClientePersona;
+    private String codClientePersona;
 
     public CuentaIntervinientesPK() {
     }
 
-    public CuentaIntervinientesPK(Integer codCuenta, Integer codClientePersona) {
+    public CuentaIntervinientesPK(Integer codCuenta, String codClientePersona) {
         this.codCuenta = codCuenta;
         this.codClientePersona = codClientePersona;
     }
+
+    @Override
+    public String toString() {
+        return "CuentaIntervinientesPK [codCuenta=" + codCuenta + ", codClientePersona=" + codClientePersona + "]";
+    }
+
+    
     
     
 }

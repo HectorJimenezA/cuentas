@@ -1,8 +1,9 @@
 package com.banquito.core.baking.cuenta.dto;
 
+import java.util.Date;
+
 import com.google.auto.value.AutoValue.Builder;
 
-import io.opencensus.common.Timestamp;
 import lombok.Data;
 
 @Builder
@@ -10,10 +11,10 @@ import lombok.Data;
 public class CuentaIntervinientesDTO {
 
     private CuentaIntervinientesPKDTO pk;
-    private Timestamp fechaInicio;
-    private Timestamp fechaFin;
+    private Date fechaInicio;
+    private Date fechaFin;
     private String estado;
-    private Timestamp fechaUltimoCambio;
+    private Date fechaUltimoCambio;
 
     
 

@@ -1,6 +1,5 @@
 package com.banquito.core.baking.cuenta.controller;
 
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.banquito.core.baking.cuenta.domain.Cuenta;
 import com.banquito.core.baking.cuenta.domain.CuentaIntervinientes;
-import com.banquito.core.baking.cuenta.dto.CuentaIntervinientesDTO;
 import com.banquito.core.baking.cuenta.service.CuentaIntervinientesService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +29,9 @@ public class CuentaIntervinientesController {
         this.cuentaIntervinientesService = cuentaIntervinientesService;
     }
 
-    @GetMapping("/getbyid/{cuentaid}/{clientepersonaid}")
+    @GetMapping("/cuentas/{cuentaid}/clientes/{clientepersonaid}")
     public ResponseEntity<CuentaIntervinientes> GetById(@PathVariable("cuentaid") Integer cuentaId,
-            @PathVariable("clientepersonaid") Integer clientePersonaId) {
+            @PathVariable("clientepersonaid") String clientePersonaId) {
             log.info("Recibida solicitud para obtener la cuenta interveniente con ID de cuenta: {} y ID de cliente: {}", cuentaId, clientePersonaId);
 
         return cuentaIntervinientesService.getById(cuentaId, clientePersonaId)
@@ -42,40 +39,50 @@ public class CuentaIntervinientesController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/getbycuenta/{cuentaid}")
+    @GetMapping("/cuentas/{cuentaid}")
     public ResponseEntity<Iterable<CuentaIntervinientes>> ObtenerPorCuenta(@PathVariable("cuentaid") Integer cuentaId) {
         log.info("Se encontraron cuentas intervenientes para la cuenta con ID: {}", cuentaId);
-        return new ResponseEntity<>(cuentaIntervinientesService.getByCuenta(cuentaId), HttpStatus.OK);
+        Iterable<CuentaIntervinientes> cuentaIntervinientes = cuentaIntervinientesService.getByCuenta(cuentaId);
+        
+        if (cuentaIntervinientes != null) {
+            log.info("Datos encontrados para la cuenta con código: {}", cuentaId);
+            return new ResponseEntity<>(cuentaIntervinientes, HttpStatus.OK);
+        } else {
+            log.error("No se encontraron datos para la cuenta con código: {}", cuentaId);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/getcuentbyinter/{clientepersonaid}")
-    public ResponseEntity<List<Cuenta>> GetByCuentaByInter(@PathVariable("clientepersonaid") Integer clientepersonaid) {
-        log.info("Se encontraron cuentas para el cliente con ID: {}", clientepersonaid);
-        return new ResponseEntity<>(cuentaIntervinientesService.getCuentaByInter(clientepersonaid), HttpStatus.OK);
+    @GetMapping("/clientes/{clientepersonaid}")
+    public ResponseEntity<Iterable<CuentaIntervinientes>> ObtenerPorCliente(@PathVariable("clientepersonaid") Integer clientepersonaid) {
+        log.info("Se encontraron cuentas intervenientes para el cliete con ID: {}", clientepersonaid);
+        Iterable<CuentaIntervinientes> cuentaIntervinientes = cuentaIntervinientesService.getByCuenta(clientepersonaid);
+        
+        if (cuentaIntervinientes != null) {
+            log.info("Datos encontrados para el cliente con código: {}", clientepersonaid);
+            return new ResponseEntity<>(cuentaIntervinientes, HttpStatus.OK);
+        } else {
+            log.error("No se encontraron datos para el cliente con código: {}", clientepersonaid);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/getbycliente/{clientepersonaid}")
-    public ResponseEntity<Iterable<CuentaIntervinientes>> GetByCodCliente(@PathVariable("clientepersonaid") Integer clientePersonaId) {
-        log.info("Se encontraron cuentas intervenientes para el cliente/persona con ID: {}", clientePersonaId);
-        return new ResponseEntity<>(cuentaIntervinientesService.getByCodCliente(clientePersonaId), HttpStatus.OK);
-    }
-
-    @PostMapping("/guardado")
-    public ResponseEntity<CuentaIntervinientes> Guardar(@RequestBody CuentaIntervinientesDTO cuentaIntervinientes) {
-        log.info("Cuenta interveniente guardada con éxito: {}", cuentaIntervinientes);
+    @PostMapping
+    public ResponseEntity<CuentaIntervinientes> Guardar(@RequestBody CuentaIntervinientes cuentaIntervinientes) {
+        log.info("Se va a guardar cuenta interviniente: {}", cuentaIntervinientes);
         return new ResponseEntity<>(cuentaIntervinientesService.crear(cuentaIntervinientes), HttpStatus.OK);
     }
 
-    @DeleteMapping("/eliminacion/{cuentaid}/{clienteid}")
+    @DeleteMapping("/cuentas/{cuentaid}/clientes/{clienteid}")
     public ResponseEntity<Boolean> Borrar(@PathVariable("cuentaid") Integer cuentaId,
-            @PathVariable("clienteid") Integer clieclientePersonaIdnteId) {
+            @PathVariable("clienteid") String clieclientePersonaIdnteId) {
         cuentaIntervinientesService.borrar(cuentaId, clieclientePersonaIdnteId);
         log.info("Cuenta interveniente eliminada con éxito. ID de cuenta: {}, ID de cliente/persona: {}", cuentaId, clieclientePersonaIdnteId);
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    @PutMapping("/actualizacion")
-    public ResponseEntity<CuentaIntervinientes> actualizar(@RequestBody CuentaIntervinientesDTO cuentaIntervinientes) {
+    @PutMapping
+    public ResponseEntity<CuentaIntervinientes> actualizar(@RequestBody CuentaIntervinientes cuentaIntervinientes) {
         log.info("Cuenta interveniente actualizada con éxito: {}", cuentaIntervinientes);
         return new ResponseEntity<>(cuentaIntervinientesService.actualizar(cuentaIntervinientes), HttpStatus.OK);
     }
